@@ -42,7 +42,7 @@ SKIP :
 | "\t"
 | "\n"
 | <"%" (~["\n", "\r"])*>
-| <"%%" (.)* "%%">
+| <"%%" (~[])* "%%">
 }
 
 TOKEN : /* PALABRAS RESERVADAS */
@@ -60,11 +60,7 @@ TOKEN : /* PALABRAS RESERVADAS */
 
 TOKEN : /* TIPOS DE DATOS */
 {
-  < tENTERO : "entero" >
-  {
-    System.out.println("ENTERO");
-  }
-| < tDECIMAL : "decimal" >
+  < tDECIMAL : "decimal" >
   {
     System.out.println("DECIMAL");
   }
@@ -82,32 +78,9 @@ TOKEN : /* AGRUPACIONES */
   }
 }
 
-TOKEN : /* VALORES */
-{
-  < #DIGITO : ["0"-"9"] >
-| < #LETRA : ["a"-"z","_","0"-"9"] >
-| < tVALOR_ENTERO : ("-")?(< DIGITO >)+ >
-  {
-    System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
-  }
-| <  tVALOR_DECIMAL : ("-")?(< DIGITO >)+"."(< DIGITO >)+ >
-  {
-    System.out.println("VALOR_DECIMAL (Valor: " + matchedToken + ")");
-  }
-| <  tIDENTIFICADOR : (< LETRA >)+ >
-  {
-    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
-  }
-}
-
-
 TOKEN : /* OPERADORES */
 {
-  <  tASIGNACION : "=" >
-  {
-    System.out.println("ASIGNACION");
-  }
-| <  tFIN_SENTENCIA : ";" >
+  <  tFIN_SENTENCIA : ";" >
   {
     System.out.println("FIN_SENTENCIA");
   }
@@ -169,10 +142,6 @@ TOKEN : /*Control de flujo */
 | < tFMQ : "fmq" >
 {
   System.out.println("FIN MIENTRAS QUE");
-}
-| < tSI_NO : "si_no" >
-{
-  System.out.println("SI NO");
 }
 }
 
@@ -296,6 +265,24 @@ TOKEN : /* operador_relacional */
 }
 }
 
+TOKEN : /* VALORES */
+{
+  < #DIGITO : ["0"-"9"] >
+| < #LETRA : ["a"-"z","_","0"-"9"] >
+| < tVALOR_ENTERO : ("-")?(< DIGITO >)+ >
+  {
+    System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
+  }
+| <  tVALOR_DECIMAL : ("-")?(< DIGITO >)+"."(< DIGITO >)+ >
+  {
+    System.out.println("VALOR_DECIMAL (Valor: " + matchedToken + ")");
+  }
+| <  tIDENTIFICADOR : (< LETRA >)+ >
+  {
+    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
+  }
+}
+
 void programa():
 {
 }
@@ -307,8 +294,8 @@ void sentencia():
 {
 }
 {
-  	< tENTERO > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_ENTERO > < tFIN_SENTENCIA >
- | < tDECIMAL > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_DECIMAL > < tFIN_SENTENCIA >
+  	< tENTERO > < tIDENTIFICADOR > <tIGUAL > < tVALOR_ENTERO > < tFIN_SENTENCIA >
+ | < tDECIMAL > < tIDENTIFICADOR > <tIGUAL > < tVALOR_DECIMAL > < tFIN_SENTENCIA >
 }
 
 void metodo():
