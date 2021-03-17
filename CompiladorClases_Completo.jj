@@ -304,4 +304,3 @@ void metodo():
 {
   	< tMETODO > < tIDENTIFICADOR > "{" (sentencia())* "}"
 }
-
