@@ -41,6 +41,7 @@ SKIP :
 | "\r"
 | "\t"
 | "\n"
+| "%.*\n"
 }
 
 TOKEN : /* PALABRAS RESERVADAS */
@@ -58,11 +59,7 @@ TOKEN : /* PALABRAS RESERVADAS */
 
 TOKEN : /* TIPOS DE DATOS */
 {
-  < tENTERO : "entero" >
-  {
-    System.out.println("ENTERO");
-  }
-| < tDECIMAL : "decimal" >
+  < tDECIMAL : "decimal" >
   {
     System.out.println("DECIMAL");
   }
@@ -101,11 +98,7 @@ TOKEN : /* VALORES */
 
 TOKEN : /* OPERADORES */
 {
-  <  tASIGNACION : "=" >
-  {
-    System.out.println("ASIGNACION");
-  }
-| <  tFIN_SENTENCIA : ";" >
+ <  tFIN_SENTENCIA : ";" >
   {
     System.out.println("FIN_SENTENCIA");
   }
@@ -167,10 +160,6 @@ TOKEN : /*Control de flujo */
 | < tFMQ : "fmq" >
 {
   System.out.println("FIN MIENTRAS QUE");
-}
-| < tSI_NO : "si_no" >
-{
-  System.out.println("SI NO");
 }
 }
 
@@ -305,8 +294,8 @@ void sentencia():
 {
 }
 {
-  	< tENTERO > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_ENTERO > < tFIN_SENTENCIA >
- | < tDECIMAL > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_DECIMAL > < tFIN_SENTENCIA >
+  	< tENTERO > < tIDENTIFICADOR > <tIGUAL > < tVALOR_ENTERO > < tFIN_SENTENCIA >
+ | < tDECIMAL > < tIDENTIFICADOR > <tIGUAL > < tVALOR_DECIMAL > < tFIN_SENTENCIA >
 }
 
 void metodo():
