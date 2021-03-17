@@ -1,5 +1,5 @@
 /**
- * Especificaci√≥n JavaCC para la Pr√°ctica 2 (Procesadores de Lenguajes)
+ * EspecificaciÛn JavaCC para la Pr·ctica 2 (Procesadores de Lenguajes)
  * Javier Fabra - jfabra@unizar.es
  * v1.2 - 2021/03/08
  */
@@ -8,8 +8,7 @@ options
   static = true;
   ignore_case = true;
 }
-aaa
-aa
+
 PARSER_BEGIN(CompiladorClases)
 
 public class CompiladorClases
@@ -17,7 +16,7 @@ public class CompiladorClases
   public static void main(String args []) throws ParseException
   {
     CompiladorClases parser = new CompiladorClases(System.in);
-    System.out.println("Leyendo de la entrada est√°ndar...");
+    System.out.println("Leyendo de la entrada est·ndar...");
     try { 
     	CompiladorClases.programa();
     	System.out.println("Analizado correctamente");
@@ -100,7 +99,155 @@ TOKEN : /* VALORES */
 }
 
 
+TOKEN : /* OPERADORES */
+{
+  <  tASIGNACION : "=" >
+  {
+    System.out.println("ASIGNACION");
+  }
+| <  tFIN_SENTENCIA : ";" >
+  {
+    System.out.println("FIN_SENTENCIA");
+  }
+}
 
+// ADICION NUESTRA.
+
+TOKEN : /*  */
+{
+  < tPROGRAMA : "programa" >
+  {
+    System.out.println("PROGRAMA");
+  }
+| < tVAR : "var" >
+{
+  System.out.println("VAR");
+}
+| < tOR : "or" >
+{
+  System.out.println("OR");
+}
+| < tNOT : "not" >
+{
+  System.out.println("NOT");
+}
+| < tPRINCIPIO : "principio" >
+{
+  System.out.println("PRINCIPIO");
+}
+| < tFIN : "fin" >
+{
+  System.out.println("FIN");
+}
+}
+
+TOKEN : /* Operador multiplicativo  */
+{
+  < tAND : "and" >
+  {
+    System.out.println("AND");
+  }
+| < tMOD : "mod" >
+{
+  System.out.println("MOD");
+}
+| < tDIV : "div" >
+{
+  System.out.println("DIV");
+}
+}
+
+TOKEN : /*tipo_variables */
+{
+  < tENTERO : "entero" >
+  {
+    System.out.println("ENTERO");
+  }
+| < tBOOLEANO : "booleano" >
+{
+  System.out.println("BOOLEANO");
+}
+| < tCARACTER : "caracter" >
+{
+  System.out.println("CARACTER");
+}
+}
+
+TOKEN : /*valor booleano*/
+{
+  < tTRUE : "true" >
+  {
+    System.out.println("TRUE");
+  }
+| < tFALSE : "false" >
+{
+  System.out.println("FALSE");
+} 
+}
+
+TOKEN : /* conversion de tipo entero y caracter */
+{
+  < tENTACAR : "entacar" >
+  {
+    System.out.println("ENTACAR");
+  }
+| < tCARAENT : "caraent" >
+{
+  System.out.println("CARAENT");
+}
+}
+
+TOKEN: /* accion */
+{
+  < tACCION : "accion" >
+  {
+    System.out.println("ACCION");
+  }
+}
+
+TOKEN : /* clase_parametros */
+{
+  < tVAL : "val" >
+  {
+    System.out.println("VAL");
+  }
+| < tREF : "ref" >
+{
+  System.out.println("REF");
+}
+}
+
+TOKEN : /* operador_relacional */
+{
+  < tMAYOR : ">" >
+  {
+    System.out.println(">");
+  }
+| < tMENOR : "<" >
+{
+  System.out.println("<");
+}
+| < tIGUAL : "=" >
+{
+  System.out.println("=");
+}
+| < tMAI : ">=" >
+{
+  System.out.println(">=");
+}
+| < tMEI : "<=" >
+{
+  System.out.println("<=");
+}
+| < tNI : "<>" >
+{
+  System.out.println("<>");
+}
+| < tOPAS : ":=" >
+{
+  System.out.println(":=");
+}
+}
 
 void programa():
 {
