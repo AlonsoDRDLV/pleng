@@ -44,6 +44,7 @@ SKIP :
 }
 
 TOKEN : /* PALABRAS RESERVADAS */
+a
 {
   < tCLASE : "clase" >
   {
