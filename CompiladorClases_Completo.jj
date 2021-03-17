@@ -113,6 +113,34 @@ TOKEN : /* OPERADORES */
 
 // ADICION NUESTRA.
 
+TOKEN : /*  */
+{
+  < tPROGRAMA : "programa" >
+  {
+    System.out.println("PROGRAMA");
+  }
+| < tVAR : "var" >
+{
+  System.out.println("VAR");
+}
+| < tOR : "or" >
+{
+  System.out.println("OR");
+}
+| < tNOT : "not" >
+{
+  System.out.println("NOT");
+}
+| < tPRINCIPIO : "principio" >
+{
+  System.out.println("PRINCIPIO");
+}
+| < tFIN : "fin" >
+{
+  System.out.println("FIN");
+}
+}
+
 TOKEN : /* Operador multiplicativo  */
 {
   < tAND : "and" >
