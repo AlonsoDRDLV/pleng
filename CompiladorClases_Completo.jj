@@ -274,7 +274,7 @@ TOKEN : /* VALORES */
   {
     System.out.println("VALOR_DECIMAL (Valor: " + matchedToken + ")");
   }
-| <  tIDENTIFICADOR : (< LETRA >)+ >
+| <  tIDENTIFICADOR : (< LETRA >)* [("a"-"z") | < DIGITO >] >
   {
     System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
   }
