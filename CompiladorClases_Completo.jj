@@ -1,5 +1,5 @@
 /**
- * Especificación JavaCC para la Práctica 2 (Procesadores de Lenguajes)
+ * Especificaciï¿½n JavaCC para la Prï¿½ctica 2 (Procesadores de Lenguajes)
  * Javier Fabra - jfabra@unizar.es
  * v1.2 - 2021/03/08
  */
@@ -16,7 +16,7 @@ public class CompiladorClases
   public static void main(String args []) throws ParseException
   {
     CompiladorClases parser = new CompiladorClases(System.in);
-    System.out.println("Leyendo de la entrada estándar...");
+    System.out.println("Leyendo de la entrada estï¿½ndar...");
     try { 
     	CompiladorClases.programa();
     	System.out.println("Analizado correctamente");
@@ -138,6 +138,51 @@ TOKEN : /*  */
 | < tFIN : "fin" >
 {
   System.out.println("FIN");
+}
+}
+
+
+TOKEN : /*Control de flujo */
+{
+  < tSI : "si" >
+  {
+    System.out.println("SI");
+  }
+| < tENT : "ent" >
+{
+  System.out.println("ENTONCES");
+}
+| < tSI_NO : "si_no" >
+{
+  System.out.println("SI NO");
+}
+| < tFSI : "fsi" >
+{
+  System.out.println("FIN SI");
+}
+| < tMQ : "mq" >
+{
+  System.out.println("MIENTRAS QUE");
+}
+| < tFMQ : "fmq" >
+{
+  System.out.println("FIN MIENTRAS QUE");
+}
+| < tSI_NO : "si_no" >
+{
+  System.out.println("SI NO");
+}
+}
+
+TOKEN : /* Lectura/Escritura */
+{
+  < tESCRIBIR : "escribir" >
+  {
+    System.out.println("ESCRIBIR");
+  }
+| < tLEER : "leer" >
+{
+  System.out.println("LEER");
 }
 }
 
