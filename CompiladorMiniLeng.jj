@@ -45,31 +45,6 @@ SKIP :
 | <"%%" (~[])* "%%">
 }
 
-TOKEN : /* PALABRAS RESERVADAS */
-{
-  < tCLASE : "clase" >
-  {
-    System.out.println("CLASE");
-  }
-| < tMETODO : "metodo" >
-  {
-    System.out.println("METODO");
-  }
-  
-}
-
-TOKEN : /* TIPOS DE DATOS */
-{
-  < tENTERO : "entero" >
-  {
-    System.out.println("ENTERO");
-  }
-| < tDECIMAL : "decimal" >
-  {
-    System.out.println("DECIMAL");
-  }
-}
-
 TOKEN : /* AGRUPACIONES */
 {
   <  tLLAVE_IZQ : "{" >
@@ -90,26 +65,9 @@ TOKEN : /* VALORES */
   {
     System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
   }
-| <  tVALOR_DECIMAL : ("-")?(< DIGITO >)+"."(< DIGITO >)+ >
-  {
-    System.out.println("VALOR_DECIMAL (Valor: " + matchedToken + ")");
-  }
 | <  tIDENTIFICADOR : (["a"-"z" | "_"]) ("a"-"z" | "0"-"9" | ("_"+ ("a"-"z" | "0"-"9")))* >
   {
     System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
-  }
-}
-
-
-TOKEN : /* OPERADORES */
-{
-  <  tASIGNACION : "=" >
-  {
-    System.out.println("ASIGNACION");
-  }
-| <  tFIN_SENTENCIA : ";" >
-  {
-    System.out.println("FIN_SENTENCIA");
   }
 }
 
@@ -217,9 +175,21 @@ TOKEN : /* operador_relacional */
 {
   System.out.println("<>");
 }
-| < tOPAS : ":=" >
+}
+
+TOKEN : /* otros */
+{
+	< tOPAS : ":=" >
 {
   System.out.println(":=");
+}
+| < tFIN_SENTENCIA : ";" >
+  {
+    System.out.println("FIN_SENTENCIA");
+  }
+| < tCOMA : "," >
+{
+  System.out.println("coma");
 }
 }
 
