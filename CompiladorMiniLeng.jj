@@ -9,22 +9,22 @@ options
   ignore_case = true;
 }
 
-PARSER_BEGIN(CompiladorClases)
+PARSER_BEGIN(CompiladorMiniLeng)
 
-public class CompiladorClases
+public class CompiladorMiniLeng
 {
   public static void main(String args []) throws ParseException
   {
-    CompiladorClases parser = new CompiladorClases(System.in);
+    CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
     System.out.println("Leyendo de la entrada est�ndar...");
     try { 
-    	CompiladorClases.programa();
+    	CompiladorMiniLeng.programa();
     	System.out.println("Analizado correctamente");
     }
     catch (Exception e) {
 		System.out.println("NOK.");
         System.out.println(e.getMessage());
-        CompiladorClases.ReInit(System.in);
+        CompiladorMiniLeng.ReInit(System.in);
 	}
     catch (Error e) { 
         System.out.println("Oops.");
@@ -33,7 +33,7 @@ public class CompiladorClases
   }
 }
 
-PARSER_END(CompiladorClases)
+PARSER_END(CompiladorMiniLeng)
 
 SKIP :
 {
