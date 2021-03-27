@@ -16,8 +16,8 @@ public class CompiladorMiniLeng
   public static void main(String args []) throws ParseException
   {
     CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+	System.out.println("Leyendo de la entrada est�ndar...");
     parser.programa();
-    System.out.println("Leyendo de la entrada est�ndar...");
     /*try { 
     	//CompiladorMiniLeng.programa();
     	System.out.println("Analizado correctamente");
@@ -188,6 +188,14 @@ TOKEN : /* VALORES */
   {
     System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
   }
+| < tCADUNCARACTER : "\"" < LETRA > "\"">
+  {
+    System.out.println("IDENTIFICADOR (Caracter : " + matchedToken + ")");
+  }
+| < tCADENA : "\"" (< LETRA >)* "\"">
+  {
+    System.out.println("IDENTIFICADOR (Cadena : " + matchedToken + ")");
+  }
 | <  tIDENTIFICADOR : (["a"-"z"] | ("_")+ (["a"-"z","0"-"9"])) (["a"-"z", "0"-"9"] | ( ("_")+ (["a"-"z","0"-"9"]) ) )* >
   {
     System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
@@ -224,8 +232,8 @@ int programa() :
 	| < tDIV >
 	| < tMOD >
 	| < tAND >
-	
-	
+	| < tCADENA >
+	| < tCADUNCARACTER >
 )+
   {
     return 0;
