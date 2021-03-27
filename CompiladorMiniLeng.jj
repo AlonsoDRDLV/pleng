@@ -1,0 +1,217 @@
+/**
+ * 	Autores:
+ *	Fecha ultima revision:
+ * 	Comentarios:
+ */
+options
+{
+  static = true;
+  ignore_case = true;
+}
+
+PARSER_BEGIN(CompiladorClases)
+
+public class CompiladorClases
+{
+  public static void main(String args []) throws ParseException
+  {
+    CompiladorClases parser = new CompiladorClases(System.in);
+    System.out.println("Leyendo de la entrada est�ndar...");
+    try { 
+    	CompiladorClases.programa();
+    	System.out.println("Analizado correctamente");
+    }
+    catch (Exception e) {
+		System.out.println("NOK.");
+        System.out.println(e.getMessage());
+        CompiladorClases.ReInit(System.in);
+	}
+    catch (Error e) { 
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+	}
+  }
+}
+
+PARSER_END(CompiladorClases)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+| <"%" (~["\n", "\r"])*>
+| <"%%" (~[])* "%%">
+}
+
+TOKEN : /* AGRUPACIONES */
+{
+  <  tLLAVE_IZQ : "{" >
+  {
+    System.out.println("LLAVE_IZQ");
+  }
+| <  tLLAVE_DCHA : "}" >
+  {
+    System.out.println("LLAVE_DCHA");
+  }
+}
+
+TOKEN : /* VALORES */
+{
+  < #DIGITO : ["0"-"9"] >
+| < #LETRA : ["a"-"z","_","0"-"9"] >
+| < tVALOR_ENTERO : ("-")?(< DIGITO >)+ >
+  {
+    System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
+  }
+| <  tIDENTIFICADOR : (["a"-"z","_"]) (["a"-"z", "0"-"9"] | ( ("_")+ (["a"-"z","0"-"9"]) ) )* >
+  {
+    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
+  }
+}
+
+// ADICION NUESTRA.
+
+TOKEN : /* Operador multiplicativo  */
+{
+  < tAND : "and" >
+  {
+    System.out.println("AND");
+  }
+| < tMOD : "mod" >
+{
+  System.out.println("MOD");
+}
+| < tDIV : "div" >
+{
+  System.out.println("DIV");
+}
+}
+
+TOKEN : /*tipo_variables */
+{
+  < tENTERO : "entero" >
+  {
+    System.out.println("ENTERO");
+  }
+| < tBOOLEANO : "booleano" >
+{
+  System.out.println("BOOLEANO");
+}
+| < tCARACTER : "caracter" >
+{
+  System.out.println("CARACTER");
+}
+}
+
+TOKEN : /*valor booleano*/
+{
+  < tTRUE : "true" >
+  {
+    System.out.println("TRUE");
+  }
+| < tFALSE : "false" >
+{
+  System.out.println("FALSE");
+} 
+}
+
+TOKEN : /* conversion de tipo entero y caracter */
+{
+  < tENTACAR : "entacar" >
+  {
+    System.out.println("ENTACAR");
+  }
+| < tCARAENT : "caraent" >
+{
+  System.out.println("CARAENT");
+}
+}
+
+TOKEN: /* accion */
+{
+  < tACCION : "accion" >
+  {
+    System.out.println("ACCION");
+  }
+}
+
+TOKEN : /* clase_parametros */
+{
+  < tVAL : "val" >
+  {
+    System.out.println("VAL");
+  }
+| < tREF : "ref" >
+{
+  System.out.println("REF");
+}
+}
+
+TOKEN : /* operador_relacional */
+{
+  < tMAYOR : ">" >
+  {
+    System.out.println(">");
+  }
+| < tMENOR : "<" >
+{
+  System.out.println("<");
+}
+| < tIGUAL : "=" >
+{
+  System.out.println("=");
+}
+| < tMAI : ">=" >
+{
+  System.out.println(">=");
+}
+| < tMEI : "<=" >
+{
+  System.out.println("<=");
+}
+| < tNI : "<>" >
+{
+  System.out.println("<>");
+}
+}
+
+TOKEN : /* otros */
+{
+	< tOPAS : ":=" >
+{
+  System.out.println(":=");
+}
+| < tFIN_SENTENCIA : ";" >
+  {
+    System.out.println("FIN_SENTENCIA");
+  }
+| < tCOMA : "," >
+{
+  System.out.println("coma");
+}
+}
+
+void programa():
+{
+}
+{
+  < tCLASE > < tIDENTIFICADOR > < tLLAVE_IZQ > (metodo())+ < tLLAVE_DCHA >
+}
+
+void sentencia():
+{
+}
+{
+  	< tENTERO > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_ENTERO > < tFIN_SENTENCIA >
+ | < tDECIMAL > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_DECIMAL > < tFIN_SENTENCIA >
+}
+
+void metodo():
+{
+}
+{
+  	< tMETODO > < tIDENTIFICADOR > "{" (sentencia())* "}"
+}
+
