@@ -16,7 +16,7 @@ public class CompiladorClases
   public static void main(String args []) throws ParseException
   {
     CompiladorClases parser = new CompiladorClases(System.in);
-    System.out.println("Leyendo de la entrada estandar...");
+    System.out.println("Leyendo de la entrada est�ndar...");
     try { 
     	CompiladorClases.programa();
     	System.out.println("Analizado correctamente");
@@ -41,10 +41,11 @@ SKIP :
 | "\r"
 | "\t"
 | "\n"
+| <"%" (~["\n", "\r"])*>
+| <"%%" (~[])* "%%">
 }
 
 TOKEN : /* PALABRAS RESERVADAS */
-a
 {
   < tCLASE : "clase" >
   {
@@ -59,7 +60,11 @@ a
 
 TOKEN : /* TIPOS DE DATOS */
 {
-  < tDECIMAL : "decimal" >
+  < tENTERO : "entero" >
+  {
+    System.out.println("ENTERO");
+  }
+| < tDECIMAL : "decimal" >
   {
     System.out.println("DECIMAL");
   }
@@ -89,67 +94,23 @@ TOKEN : /* VALORES */
   {
     System.out.println("VALOR_DECIMAL (Valor: " + matchedToken + ")");
   }
-| < tVAR : "var" >
-{
-  System.out.println("VAR");
-}
-| < tOR : "or" >
-{
-  System.out.println("OR");
-}
-| < tNOT : "not" >
-{
-  System.out.println("NOT");
-}
-| < tPRINCIPIO : "principio" >
-{
-  System.out.println("PRINCIPIO");
-}
-| < tFIN : "fin" >
-{
-  System.out.println("FIN");
-}
-}
-
-
-TOKEN : /*Control de flujo */
-{
-  < tSI : "si" >
+| <  tIDENTIFICADOR : (< LETRA >)+ >
   {
-    System.out.println("SI");
+    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
   }
-| < tENT : "ent" >
-{
-  System.out.println("ENTONCES");
-}
-| < tSI_NO : "si_no" >
-{
-  System.out.println("SI NO");
-}
-| < tFSI : "fsi" >
-{
-  System.out.println("FIN SI");
-}
-| < tMQ : "mq" >
-{
-  System.out.println("MIENTRAS QUE");
-}
-| < tFMQ : "fmq" >
-{
-  System.out.println("FIN MIENTRAS QUE");
-}
 }
 
-TOKEN : /* Lectura/Escritura */
+
+TOKEN : /* OPERADORES */
 {
-  < tESCRIBIR : "escribir" >
+  <  tASIGNACION : "=" >
   {
-    System.out.println("ESCRIBIR");
+    System.out.println("ASIGNACION");
   }
-| < tLEER : "leer" >
-{
-  System.out.println("LEER");
-}
+| <  tFIN_SENTENCIA : ";" >
+  {
+    System.out.println("FIN_SENTENCIA");
+  }
 }
 
 // ADICION NUESTRA.
@@ -262,24 +223,6 @@ TOKEN : /* operador_relacional */
 }
 }
 
-TOKEN : /* VALORES */
-{
-  < #DIGITO : ["0"-"9"] >
-| < #LETRA : ["a"-"z","_","0"-"9"] >
-| < tVALOR_ENTERO : ("-")?(< DIGITO >)+ >
-  {
-    System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
-  }
-| <  tVALOR_DECIMAL : ("-")?(< DIGITO >)+"."(< DIGITO >)+ >
-  {
-    System.out.println("VALOR_DECIMAL (Valor: " + matchedToken + ")");
-  }
-| <  tIDENTIFICADOR : (< LETRA >)* [("a"-"z") | < DIGITO >] >
-  {
-    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
-  }
-}
-
 void programa():
 {
 }
@@ -291,8 +234,8 @@ void sentencia():
 {
 }
 {
-  	< tENTERO > < tIDENTIFICADOR > <tIGUAL > < tVALOR_ENTERO > < tFIN_SENTENCIA >
- | < tDECIMAL > < tIDENTIFICADOR > <tIGUAL > < tVALOR_DECIMAL > < tFIN_SENTENCIA >
+  	< tENTERO > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_ENTERO > < tFIN_SENTENCIA >
+ | < tDECIMAL > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_DECIMAL > < tFIN_SENTENCIA >
 }
 
 void metodo():
@@ -301,3 +244,4 @@ void metodo():
 {
   	< tMETODO > < tIDENTIFICADOR > "{" (sentencia())* "}"
 }
+
