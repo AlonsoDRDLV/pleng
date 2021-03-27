@@ -57,20 +57,6 @@ TOKEN : /* AGRUPACIONES */
   }
 }
 
-TOKEN : /* VALORES */
-{
-  < #DIGITO : ["0"-"9"] >
-| < #LETRA : ["a"-"z","_","0"-"9"] >
-| < tVALOR_ENTERO : ("-")?(< DIGITO >)+ >
-  {
-    System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
-  }
-| <  tIDENTIFICADOR : (["a"-"z","_"]) (["a"-"z", "0"-"9"] | ( ("_")+ (["a"-"z","0"-"9"]) ) )* >
-  {
-    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
-  }
-}
-
 // ADICION NUESTRA.
 
 TOKEN : /* Operador multiplicativo  */
@@ -193,25 +179,16 @@ TOKEN : /* otros */
 }
 }
 
-void programa():
+TOKEN : /* VALORES */
 {
+  < #DIGITO : ["0"-"9"] >
+| < #LETRA : ["a"-"z","_","0"-"9"] >
+| < tVALOR_ENTERO : ("-")?(< DIGITO >)+ >
+  {
+    System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
+  }
+| <  tIDENTIFICADOR : (["a"-"z","_"]) (["a"-"z", "0"-"9"] | ( ("_")+ (["a"-"z","0"-"9"]) ) )* >
+  {
+    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
+  }
 }
-{
-  < tCLASE > < tIDENTIFICADOR > < tLLAVE_IZQ > (metodo())+ < tLLAVE_DCHA >
-}
-
-void sentencia():
-{
-}
-{
-  	< tENTERO > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_ENTERO > < tFIN_SENTENCIA >
- | < tDECIMAL > < tIDENTIFICADOR > <tASIGNACION > < tVALOR_DECIMAL > < tFIN_SENTENCIA >
-}
-
-void metodo():
-{
-}
-{
-  	< tMETODO > < tIDENTIFICADOR > "{" (sentencia())* "}"
-}
-
