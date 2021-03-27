@@ -1,7 +1,7 @@
 /**
- * Pr�ctica 2.
- * PIPO
- * v1.2 - 2021/03/08
+ * 	Autores:
+ *	Fecha ultima revision:
+ * 	Comentarios:
  */
 options
 {
@@ -16,7 +16,7 @@ public class CompiladorClases
   public static void main(String args []) throws ParseException
   {
     CompiladorClases parser = new CompiladorClases(System.in);
-    System.out.println("Leyendo de la entrada est�ndar...");
+    System.out.println("Leyendo de la entrada estandar...");
     try { 
     	CompiladorClases.programa();
     	System.out.println("Analizado correctamente");
