@@ -6,7 +6,7 @@
 options
 {
   static = true;
-  ignore_case = true;
+  ignore_case = true; // No distingue entre mayusculas y minusculas.
 }
 
 PARSER_BEGIN(CompiladorClases)
@@ -94,7 +94,7 @@ TOKEN : /* VALORES */
   {
     System.out.println("VALOR_DECIMAL (Valor: " + matchedToken + ")");
   }
-| <  tIDENTIFICADOR : (["a"-"z" | "_"]) ("a"-"z" | "0"-"9" | ("_"+ ("a"-"z" | "0"-"9")))* >
+| <  tIDENTIFICADOR : (["a"-"z"] | ("_")+ ["a"-"z","0"-"9"] | ["a"-"z","_"] (< DIGITO >)+ )+ >
   {
     System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
   }
