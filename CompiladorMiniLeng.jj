@@ -16,9 +16,10 @@ public class CompiladorMiniLeng
   public static void main(String args []) throws ParseException
   {
     CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+    parser.programa();
     System.out.println("Leyendo de la entrada est�ndar...");
-    try { 
-    	CompiladorMiniLeng.programa();
+    /*try { 
+    	//CompiladorMiniLeng.programa();
     	System.out.println("Analizado correctamente");
     }
     catch (Exception e) {
@@ -29,7 +30,7 @@ public class CompiladorMiniLeng
     catch (Error e) { 
         System.out.println("Oops.");
         System.out.println(e.getMessage());
-	}
+	}*/
   }
 }
 
@@ -187,8 +188,46 @@ TOKEN : /* VALORES */
   {
     System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
   }
-| <  tIDENTIFICADOR : (["a"-"z","_"]) (["a"-"z", "0"-"9"] | ( ("_")+ (["a"-"z","0"-"9"]) ) )* >
+| <  tIDENTIFICADOR : (["a"-"z"] | ("_")+ (["a"-"z","0"-"9"])) (["a"-"z", "0"-"9"] | ( ("_")+ (["a"-"z","0"-"9"]) ) )* >
   {
     System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
+  }
+}
+
+int programa() :
+{}
+{
+(
+	< tENTERO >
+	| < tCARACTER >
+	| < tBOOLEANO >
+	| < tLLAVE_IZQ >
+	| < tLLAVE_DCHA >
+	| < tVALOR_ENTERO >
+	| < tIDENTIFICADOR >
+	| < tCOMA >
+	| < tOPAS >
+	| < tFIN_SENTENCIA >
+	| < tNI >
+	| < tMEI >
+	| < tMAI >
+	| < tIGUAL >
+	| < tMENOR >
+	| < tMAYOR >
+	| < tREF >
+	| < tVAL >
+	| < tACCION >
+	| < tCARAENT >
+	| < tENTACAR >
+	| < tFALSE >
+	| < tTRUE >
+	| < tDIV >
+	| < tMOD >
+	| < tAND >
+	
+	
+)+
+  {
+    return 0;
   }
 }
