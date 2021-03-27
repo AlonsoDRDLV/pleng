@@ -58,18 +58,6 @@ TOKEN : /* PALABRAS RESERVADAS */
   
 }
 
-TOKEN : /* TIPOS DE DATOS */
-{
-  < tENTERO : "entero" >
-  {
-    System.out.println("ENTERO");
-  }
-| < tDECIMAL : "decimal" >
-  {
-    System.out.println("DECIMAL");
-  }
-}
-
 TOKEN : /* AGRUPACIONES */
 {
   <  tLLAVE_IZQ : "{" >
