@@ -61,7 +61,11 @@ TOKEN : /* AGRUPACIONES */
 
 TOKEN : /*  */
 {
-  < tPRINCIPIO : "Control de flujo">
+  < tPROGRAMA : "programa">
+  {
+    System.out.println("programa");
+  }
+| < tPRINCIPIO : "principio">
   {
     System.out.println("principio");
   }
