@@ -269,13 +269,13 @@ TOKEN : /* VALORES */
   }
 }
 
-void programa ()
+void programa ():
 {}
 {
   <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion_variables() declaracion_acciones() bloque_sentencias()
 }
 
-void declaracion ()
+void declaracion ():
 {}
 {
   <tENTERO> <tIDENTIFICADOR > (< tCOMA > <tIDENTIFICADOR >)*
@@ -283,37 +283,37 @@ void declaracion ()
 | <tBOOLEANO> (< tCOMA > <tIDENTIFICADOR >)* < tFIN_SENTENCIA >
 }
 
-void declaracion_acciones()
+void declaracion_acciones():
 {}
 {
   (declaracion_accion)*
 }
 
-void declaracion_accion()
+void declaracion_accion():
 {}
 {
   cabecera_accion() < tFIN_SENTENCIA > declaracion() declaracion_acciones()
 }
 
-void cabecera_accion()
+void cabecera_accion():
 {}
 {
 	<tACCION> <tIDENTIFICADOR> ( parametros_formales() )?
 }
 
-void bloque_sentencias()
+void bloque_sentencias():
 {}
 {
   <tPRINCIPIO> lista_sentencias <tFIN>
 }
 
-void lista_sentencias()
+void lista_sentencias():
 {}
 {
   ( sentencia() )+
 }
 
-void sentencias()
+void sentencias():
 {}
 {
   leer() < tFIN_SENTENCIA >
@@ -324,105 +324,105 @@ void sentencias()
 | mientras_que() < tFIN_SENTENCIA >
 }
 
-void leer()
+void leer():
 {}
 {
   <tLEER> <tPARENTESIS_IZQ > lista_asignables() < tPARENTESIS_DCH >
 }
 
-void lista_asignables()
+void lista_asignables():
 {}
 {
   ( <tIDENTIFICADOR> <tFIN_SENTENCIA >)* <tIDENTIFICADOR> <tFIN_SENTENCIA >
 }
 
-void lista_escribibles()
+void lista_escribibles():
 {}
 {
   ( ( <tIDENTIFICADOR> | <tCONSTCHAR> | <tCONSTCAD> | <tENTACAR> < tPARENTESIS_IZQ >
   expresion() < tPARENTESIS_DCH > ) < tCOMA >)* ( <tIDENTIFICADOR> | <tCONSTCHAR> | <tCONSTCAD> |  ) < tFIN_SENTENCIA >
 }
 
-void escribir()
+void escribir():
 {}
 {
   <tESCRIBIR> <tPARENTESIS_IZQ> lista_escribibles() <tPARENTESIS_DCH>
 }
 
-void asignacion()
+void asignacion():
 {}
 {
   <tIDENTIFICADOR> <tOPAS> expresion < tFIN_SENTENCIA >
 }
 
-void invocacion_accion()
+void invocacion_accion():
 {}
 {
   <tIDENTIFICADOR> argumentos() < tFIN_SENTENCIA >
 }
 
-void mientras_que()
+void mientras_que():
 {}
 {
   <tMQ> expresion() lista_sentencias() <tFMQ>
 }
 
-void seleccion()
+void seleccion():
 {}
 {
   <tSI> argumentos() <tENT> lista_sentencias() ( <tSI_NO> lista_sentencias())? <tFSI>
 }
 
-void argumentos()
+void argumentos():
 {}
 {
   < tPARENTESIS_IZQ > ( lista_expresiones )? < tPARENTESIS_DCH >
 }
 
-void lista_expresiones()
+void lista_expresiones():
 {}
 {
   expresion()
 | expresion() operador_relacional() lista_expresiones()
 }
 
-void expresion()
+void expresion():
 {}
 {
   expresion_simple() operador_relacional() expresion_simple()
 }
 
-void operador_relacional()
+void operador_relacional():
 {}
 {
   <tOPAS> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
 }
 
-void expresion_simple()
+void expresion_simple():
 {}
 {
   termino | ("+" | "-") termino | expresion_simple operador_aditivo termino	
 }
 
-void operador_aditivo()
+void operador_aditivo():
 {}
 {
 	< tMAS > | < tMENOS > | <tOR>
 }
 
-void termino()
+void termino():
 {}
 {
   factor() operador_multiplicativo() factor()
 }
 
-void operador_multiplicativo()
+void operador_multiplicativo():
 {}
 {
   < tMUL > | <tDIV> | <tMOD> | <tAND>
 }
 
-void factor()
+void factor():
 {}
 {
   "-" factor
