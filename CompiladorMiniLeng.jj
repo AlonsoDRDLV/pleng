@@ -270,6 +270,14 @@ int programa() :
 	| < tAND >
 	| < tCADENA >
 	| < tCADUNCARACTER >
+	| < tPRINCIPIO >
+	| < tFIN >
+	| < tSI>
+	| < tENT >
+	| < tSI_NO >
+	| < tFSI >
+	| < tMQ >
+	| < tFMQ >
 )+
   {
     return 0;
