@@ -21,11 +21,17 @@ public class CompiladorMiniLeng
     	CompiladorMiniLeng.programa();
     	System.out.println("Analizado correctamente");
     }
-    catch (Exception e) {
+    catch (TokenMgrError e) {
+		//Error léxico
+		System.out.println("Error léxico!.");
+        System.out.println(e.getMessage());
+	}
+	catch (ParseException e) {
+		//Error sintáctico
 		System.out.println("NOK.");
         System.out.println(e.getMessage());
         CompiladorMiniLeng.ReInit(System.in);
-	}
+	} 
     catch (Error e) {
         System.out.println("Oops.");
         System.out.println(e.getMessage());
@@ -103,6 +109,12 @@ TOKEN : /*  */
   }
 }
 
+TOKEN: /* E/S */
+{
+  < tESCRIBIR : "escribir" >
+| < tLEER : "leer" >
+}
+
 TOKEN : /* Operador multiplicativo  */
 {
   < tAND : "and" >
@@ -112,6 +124,14 @@ TOKEN : /* Operador multiplicativo  */
 | < tMOD : "mod" >
 {
   System.out.println("MOD");
+}
+| < tOR : "or" >
+{
+  System.out.println("OR");
+}
+| < tNOT : "not" >
+{
+  System.out.println("NOT");
 }
 }
 
@@ -217,7 +237,7 @@ TOKEN : /* otros */
   {
   	System.out.println("coma");
   }
-| < tPARENTISIS_IZQ : "(" >
+| < tPARENTESIS_IZQ : "(" >
   {
     System.out.println("(");
   }
@@ -251,7 +271,7 @@ TOKEN : /* VALORES */
 {
   < #DIGITO : ["0"-"9"] >
 | < #LETRA : ["a"-"z","_","0"-"9"] >
-| < tVALOR_ENTERO : ("-")?(< DIGITO >)+ >
+| < tCONSTENTERA : ("-")?(< DIGITO >)+ >
   {
     System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
   }
@@ -272,21 +292,37 @@ TOKEN : /* VALORES */
 void programa ():
 {}
 {
-  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion_variables() declaracion_acciones() bloque_sentencias()
+  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion() declaracion_acciones() bloque_sentencias()
+}
+
+void declaracion_variables():
+{}
+{
+  ( declaracion() ";" )*
 }
 
 void declaracion ():
 {}
 {
-  <tENTERO> <tIDENTIFICADOR > (< tCOMA > <tIDENTIFICADOR >)*
-| <tCARACTER> (< tCOMA > <tIDENTIFICADOR >)*
-| <tBOOLEANO> (< tCOMA > <tIDENTIFICADOR >)* < tFIN_SENTENCIA >
+  tipo_variables() identificadores()
+}
+
+void identificadores():
+{}
+{
+  <tIDENTIFICADOR> ( "," <tIDENTIFICADOR> )*
+}
+
+void tipo_variables():
+{}
+{
+   <tENTERO> | <tCARACTER> | <tBOOLEANO>
 }
 
 void declaracion_acciones():
 {}
 {
-  (declaracion_accion)*
+  (declaracion_accion())*
 }
 
 void declaracion_accion():
@@ -301,10 +337,31 @@ void cabecera_accion():
 	<tACCION> <tIDENTIFICADOR> ( parametros_formales() )?
 }
 
+void parametros_formales() :
+{}
+{
+  "(" parametros() ")" ";"
+}
+
+void lista_parametros():
+{}
+{
+  <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)* 
+}
+
+void parametros():
+{}
+{
+  < tVAL > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
+| < tREF > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
+}
+
+
+
 void bloque_sentencias():
 {}
 {
-  <tPRINCIPIO> lista_sentencias <tFIN>
+  <tPRINCIPIO> lista_sentencias() <tFIN>
 }
 
 void lista_sentencias():
@@ -313,7 +370,7 @@ void lista_sentencias():
   ( sentencia() )+
 }
 
-void sentencias():
+void sentencia():
 {}
 {
   leer() < tFIN_SENTENCIA >
@@ -340,7 +397,7 @@ void lista_escribibles():
 {}
 {
   ( ( <tIDENTIFICADOR> | <tCONSTCHAR> | <tCONSTCAD> | <tENTACAR> < tPARENTESIS_IZQ >
-  expresion() < tPARENTESIS_DCH > ) < tCOMA >)* ( <tIDENTIFICADOR> | <tCONSTCHAR> | <tCONSTCAD> |  ) < tFIN_SENTENCIA >
+  expresion() < tPARENTESIS_DCH > ) < tCOMA >)* ( <tIDENTIFICADOR> | <tCONSTCHAR> | <tCONSTCAD>) < tFIN_SENTENCIA >
 }
 
 void escribir():
@@ -352,7 +409,7 @@ void escribir():
 void asignacion():
 {}
 {
-  <tIDENTIFICADOR> <tOPAS> expresion < tFIN_SENTENCIA >
+  <tIDENTIFICADOR> <tOPAS> expresion() < tFIN_SENTENCIA >
 }
 
 void invocacion_accion():
@@ -376,20 +433,19 @@ void seleccion():
 void argumentos():
 {}
 {
-  < tPARENTESIS_IZQ > ( lista_expresiones )? < tPARENTESIS_DCH >
+  < tPARENTESIS_IZQ > ( lista_expresiones() )? < tPARENTESIS_DCH >
 }
 
 void lista_expresiones():
 {}
 {
-  expresion()
-| expresion() operador_relacional() lista_expresiones()
+  expresion() (expresion() operador_relacional() lista_expresiones())?
 }
 
 void expresion():
 {}
 {
-  expresion_simple() operador_relacional() expresion_simple()
+  expresion_simple() (operador_relacional() expresion_simple() )?
 }
 
 void operador_relacional():
@@ -401,7 +457,7 @@ void operador_relacional():
 void expresion_simple():
 {}
 {
-  termino | ("+" | "-") termino | expresion_simple operador_aditivo termino	
+  ("+" | "-")? termino() (operador_aditivo() termino())*
 }
 
 void operador_aditivo():
@@ -425,11 +481,11 @@ void operador_multiplicativo():
 void factor():
 {}
 {
-  "-" factor
-    | <tNOT> factor
-    | "(" expresion ")"
-    | <tENTACAR> "(" expresion ")"
-    | <tCARAENT> "(" expresion ")"
+  "-" factor()
+    | <tNOT> factor()
+    | "(" expresion() ")"
+    | <tENTACAR> "(" expresion() ")"
+    | <tCARAENT> "(" expresion() ")"
     | <tIDENTIFICADOR>
     | <tCONSTENTERA>
     | <tCONSTCHAR>
