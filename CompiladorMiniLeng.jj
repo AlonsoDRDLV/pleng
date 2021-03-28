@@ -16,7 +16,7 @@ public class CompiladorMiniLeng
   public static void main(String args []) throws ParseException
   {
     CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
-	System.out.println("Leyendo de la entrada est�ndar...");
+	System.out.println("Leyendo de la entrada estandar...");
     parser.programa();
     /*try { 
     	//CompiladorMiniLeng.programa();
@@ -59,6 +59,42 @@ TOKEN : /* AGRUPACIONES */
 }
 
 // ADICION NUESTRA.
+
+TOKEN : /*  */
+{
+  < tPRINCIPIO : "Control de flujo">
+  {
+    System.out.println("principio");
+  }
+| < tFIN : "fin">
+  {
+    System.out.println("fin");
+  }
+| < tSI: "si" >
+  {
+    System.out.println("si");
+  }
+| < tENT: "ent" >
+  {
+    System.out.println("ent");
+  }
+| < tSI_NO: "si_no" >
+  {
+    System.out.println("si_no");
+  }
+| < tFSI : "fsi">
+  {
+    System.out.println("fsi");
+  }
+| < tMQ : "mq" >
+  {
+    System.out.println("mq");
+  }
+| < tFMQ : "fmq" >
+  {
+    System.out.println("fmq");
+  }
+}
 
 TOKEN : /* Operador multiplicativo  */
 {
