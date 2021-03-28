@@ -109,10 +109,6 @@ TOKEN : /* Operador multiplicativo  */
 {
   System.out.println("MOD");
 }
-| < tDIV : "div" >
-{
-  System.out.println("DIV");
-}
 }
 
 TOKEN : /*tipo_variables */
@@ -214,9 +210,37 @@ TOKEN : /* otros */
     System.out.println("FIN_SENTENCIA");
   }
 | < tCOMA : "," >
-{
-  System.out.println("coma");
+  {
+  	System.out.println("coma");
+  }
+| < tPARENTISIS_IZQ : "(" >
+  {
+    System.out.println("(");
+  }
+| < tPARENTESIS_DCH : ")" >
+  {
+    System.out.println(")");
+  }
 }
+
+TOKEN: /* Operadores aritméticos */
+{
+  < tMAS : "+">
+  {
+    System.out.println("MAS");
+  }
+| < tMENOS : "-" >
+  {
+    System.out.println("MENOS");
+  }
+| < tDIV : "/" >
+  {
+    System.out.println("/");
+  }
+| < tMUL : "*" >
+  {
+    System.out.println("*");
+  }
 }
 
 TOKEN : /* VALORES */
@@ -268,7 +292,6 @@ int programa() :
 	| < tENTACAR >
 	| < tFALSE >
 	| < tTRUE >
-	| < tDIV >
 	| < tMOD >
 	| < tAND >
 	| < tCADENA >
