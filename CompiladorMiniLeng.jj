@@ -305,6 +305,11 @@ int programa() :
 	| < tMQ >
 	| < tFMQ >
 	| < tPROGRAMA >
+	| < tMAS >
+	| < tMENOS >
+	| < tMUL >
+	| < tPARENTISIS_IZQ >
+	| < tPARENTISIS_DCH >
 )+
   {
     return 0;
