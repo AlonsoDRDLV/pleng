@@ -33,7 +33,8 @@ public class CompiladorMiniLeng
 			+ SimpleCharStream.readChar()
 			);
 		} catch (Exception ex) {
-			//
+			// Excepcion por readChar
+			System.out.println(ex.getMessage());
 		}
 	}
 	catch (ParseException e) {
@@ -302,7 +303,29 @@ TOKEN : /* VALORES */
 void programa ():
 {}
 {
-  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion() declaracion_acciones() bloque_sentencias() < EOF >
+	try {
+	  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion() declaracion_acciones() bloque_sentencias() < EOF >
+	}
+    catch (ParseException e) {
+      try {
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ e.currentToken.next.image
+		+ " "
+		+ e.expectedTokenSequences
+		);
+
+		Token t;
+		System.out.println(e.toString());
+		do {
+		t = getNextToken();
+		} while (t.kind != tFIN_SENTENCIA && t!=null && t.kind != EOF );
+	  } catch (Exception ex) {}
+	}
+  
 }
 
 void declaracion_variables():

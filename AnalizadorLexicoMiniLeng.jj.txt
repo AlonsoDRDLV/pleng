@@ -65,6 +65,10 @@ TOKEN : /*  */
   {
     System.out.println("programa");
   }
+| < tVAR : "var">
+  {
+    System.out.println("var");
+  }
 | < tPRINCIPIO : "principio">
   {
     System.out.println("principio");
@@ -99,6 +103,12 @@ TOKEN : /*  */
   }
 }
 
+TOKEN: /* E/S */
+{
+  < tESCRIBIR : "escribir" >
+| < tLEER : "leer" >
+}
+
 TOKEN : /* Operador multiplicativo  */
 {
   < tAND : "and" >
@@ -109,9 +119,13 @@ TOKEN : /* Operador multiplicativo  */
 {
   System.out.println("MOD");
 }
-| < tDIV : "div" >
+| < tOR : "or" >
 {
-  System.out.println("DIV");
+  System.out.println("OR");
+}
+| < tNOT : "not" >
+{
+  System.out.println("NOT");
 }
 }
 
@@ -214,24 +228,52 @@ TOKEN : /* otros */
     System.out.println("FIN_SENTENCIA");
   }
 | < tCOMA : "," >
-{
-  System.out.println("coma");
+  {
+  	System.out.println("coma");
+  }
+| < tPARENTESIS_IZQ : "(" >
+  {
+    System.out.println("(");
+  }
+| < tPARENTESIS_DCH : ")" >
+  {
+    System.out.println(")");
+  }
 }
+
+TOKEN: /* Operadores aritméticos */
+{
+  < tMAS : "+">
+  {
+    System.out.println("MAS");
+  }
+| < tMENOS : "-" >
+  {
+    System.out.println("MENOS");
+  }
+| < tDIV : "/" >
+  {
+    System.out.println("/");
+  }
+| < tMUL : "*" >
+  {
+    System.out.println("*");
+  }
 }
 
 TOKEN : /* VALORES */
 {
   < #DIGITO : ["0"-"9"] >
 | < #LETRA : ["a"-"z","_","0"-"9"] >
-| < tVALOR_ENTERO : ("-")?(< DIGITO >)+ >
+| < tCONSTENTERA : ("-")?(< DIGITO >)+ >
   {
     System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
   }
-| < tCADUNCARACTER : "\"" < LETRA > "\"">
+| < tCONSTCHAR : "\"" < LETRA > "\"">
   {
     System.out.println("IDENTIFICADOR (Caracter : " + matchedToken + ")");
   }
-| < tCADENA : "\"" (< LETRA >)* "\"">
+| < tCONSTCAD : "\"" (< LETRA >)* "\"">
   {
     System.out.println("IDENTIFICADOR (Cadena : " + matchedToken + ")");
   }
@@ -250,7 +292,7 @@ int programa() :
 	| < tBOOLEANO >
 	| < tLLAVE_IZQ >
 	| < tLLAVE_DCHA >
-	| < tVALOR_ENTERO >
+	| < tCONSTENTERA >
 	| < tIDENTIFICADOR >
 	| < tCOMA >
 	| < tOPAS >
@@ -271,8 +313,8 @@ int programa() :
 	| < tDIV >
 	| < tMOD >
 	| < tAND >
-	| < tCADENA >
-	| < tCADUNCARACTER >
+	| < tCONSTCHAR >
+	| < tCONSTCAD >
 	| < tPRINCIPIO >
 	| < tFIN >
 	| < tSI>
@@ -281,6 +323,9 @@ int programa() :
 	| < tFSI >
 	| < tMQ >
 	| < tFMQ >
+	| < tMAS >
+	| < tMENOS >
+	| < tMUL >
 )+
   {
     return 0;
