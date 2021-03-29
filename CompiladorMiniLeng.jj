@@ -28,7 +28,7 @@ public class CompiladorMiniLeng
 	}
 	catch (ParseException e) {
 		//Error sintáctico
-		System.out.println("NOK.");
+		System.out.println("Error sintáctico!");
         System.out.println(e.getMessage());
         CompiladorMiniLeng.ReInit(System.in);
 	} 
@@ -328,7 +328,7 @@ void declaracion_acciones():
 void declaracion_accion():
 {}
 {
-  cabecera_accion() < tFIN_SENTENCIA > declaracion() declaracion_acciones()
+  cabecera_accion() < tFIN_SENTENCIA > declaracion() declaracion_acciones() bloque_sentencias()
 }
 
 void cabecera_accion():
@@ -375,10 +375,9 @@ void sentencia():
 {
   leer() < tFIN_SENTENCIA >
 | escribir() < tFIN_SENTENCIA >
-| asignacion() < tFIN_SENTENCIA >
-| invocacion_accion() < tFIN_SENTENCIA >
-| seleccion() < tFIN_SENTENCIA >
-| mientras_que() < tFIN_SENTENCIA >
+| <tIDENTIFICADOR> asig_incaccion()
+| seleccion()
+| mientras_que()
 }
 
 void leer():
@@ -390,14 +389,13 @@ void leer():
 void lista_asignables():
 {}
 {
-  ( <tIDENTIFICADOR> <tFIN_SENTENCIA >)* <tIDENTIFICADOR> <tFIN_SENTENCIA >
+  <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)*
 }
 
 void lista_escribibles():
 {}
 {
-  ( ( <tIDENTIFICADOR> | <tCONSTCHAR> | <tCONSTCAD> | <tENTACAR> < tPARENTESIS_IZQ >
-  expresion() < tPARENTESIS_DCH > ) < tCOMA >)* ( <tIDENTIFICADOR> | <tCONSTCHAR> | <tCONSTCAD>) < tFIN_SENTENCIA >
+  lista_expresiones()
 }
 
 void escribir():
@@ -406,16 +404,22 @@ void escribir():
   <tESCRIBIR> <tPARENTESIS_IZQ> lista_escribibles() <tPARENTESIS_DCH>
 }
 
+void asig_incaccion():
+{}
+{
+  asignacion() | invocacion_accion()
+}
+
 void asignacion():
 {}
 {
-  <tIDENTIFICADOR> <tOPAS> expresion() < tFIN_SENTENCIA >
+  <tOPAS> expresion() < tFIN_SENTENCIA >
 }
 
 void invocacion_accion():
 {}
 {
-  <tIDENTIFICADOR> argumentos() < tFIN_SENTENCIA >
+  argumentos() < tFIN_SENTENCIA >
 }
 
 void mientras_que():
@@ -427,7 +431,7 @@ void mientras_que():
 void seleccion():
 {}
 {
-  <tSI> argumentos() <tENT> lista_sentencias() ( <tSI_NO> lista_sentencias())? <tFSI>
+  <tSI> expresion() <tENT> lista_sentencias() ( <tSI_NO> lista_sentencias())? <tFSI>
 }
 
 void argumentos():
@@ -439,25 +443,25 @@ void argumentos():
 void lista_expresiones():
 {}
 {
-  expresion() (expresion() operador_relacional() lista_expresiones())?
+  expresion() ("," expresion())*
 }
 
 void expresion():
 {}
 {
-  expresion_simple() (operador_relacional() expresion_simple() )?
+  expresion_simple() ( operador_relacional() expresion_simple() )?
 }
 
 void operador_relacional():
 {}
 {
-  <tOPAS> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
+  <tIGUAL> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
 }
 
 void expresion_simple():
 {}
 {
-  ("+" | "-")? termino() (operador_aditivo() termino())*
+  ("+" | "-")? termino() ( operador_aditivo() termino() )*
 }
 
 void operador_aditivo():
@@ -469,7 +473,7 @@ void operador_aditivo():
 void termino():
 {}
 {
-  factor() operador_multiplicativo() factor()
+  factor() ( operador_multiplicativo() factor() )*
 }
 
 void operador_multiplicativo():
@@ -481,8 +485,7 @@ void operador_multiplicativo():
 void factor():
 {}
 {
-  "-" factor()
-    | <tNOT> factor()
+	<tNOT> factor()
     | "(" expresion() ")"
     | <tENTACAR> "(" expresion() ")"
     | <tCARAENT> "(" expresion() ")"
