@@ -352,13 +352,13 @@ void declaracion ():
   tipo_variables() identificadores()
 }
 
-void identificadores():
+void identificadores(): // Error sintactico
 {}
 {
   <tIDENTIFICADOR> ( "," <tIDENTIFICADOR> )*
 }
 
-void tipo_variables():
+void tipo_variables(): // Error sintactico
 {}
 {
    <tENTERO> | <tCARACTER> | <tBOOLEANO>
@@ -370,31 +370,31 @@ void declaracion_acciones():
   (declaracion_accion())*
 }
 
-void declaracion_accion():
+void declaracion_accion(): // Error sintactico
 {}
 {
   cabecera_accion() < tFIN_SENTENCIA > declaracion() declaracion_acciones() bloque_sentencias()
 }
 
-void cabecera_accion():
+void cabecera_accion(): // Error sintactico
 {}
 {
 	<tACCION> <tIDENTIFICADOR> ( parametros_formales() )?
 }
 
-void parametros_formales() :
+void parametros_formales() : // Error sintactico
 {}
 {
-  "(" parametros() ")" ";"
+  < tPARENTESIS_IZQ > parametros() < tPARENTESIS_DCH > < tFIN_SENTENCIA>
 }
 
-void lista_parametros():
+void lista_parametros(): // Error sintactico
 {}
 {
   <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)* 
 }
 
-void parametros():
+void parametros(): // Error sintactico
 {}
 {
   < tVAL > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
@@ -403,7 +403,7 @@ void parametros():
 
 
 
-void bloque_sentencias():
+void bloque_sentencias(): // Error sintactico
 {}
 {
   <tPRINCIPIO> lista_sentencias() <tFIN>
@@ -415,7 +415,7 @@ void lista_sentencias():
   ( sentencia() )+
 }
 
-void sentencia():
+void sentencia(): // Error sintactico
 {}
 {
   leer() < tFIN_SENTENCIA >
@@ -425,13 +425,13 @@ void sentencia():
 | mientras_que()
 }
 
-void leer():
+void leer(): // Error sintactico
 {}
 {
   <tLEER> <tPARENTESIS_IZQ > lista_asignables() < tPARENTESIS_DCH >
 }
 
-void lista_asignables():
+void lista_asignables(): // Error sintactico
 {}
 {
   <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)*
@@ -443,7 +443,7 @@ void lista_escribibles():
   lista_expresiones()
 }
 
-void escribir():
+void escribir(): // Error sintactico
 {}
 {
   <tESCRIBIR> <tPARENTESIS_IZQ> lista_escribibles() <tPARENTESIS_DCH>
@@ -455,40 +455,40 @@ void asig_incaccion():
   asignacion() | invocacion_accion()
 }
 
-void asignacion():
+void asignacion(): // Error sintactico
 {}
 {
   <tOPAS> expresion() < tFIN_SENTENCIA >
 }
 
-void invocacion_accion():
+void invocacion_accion(): // Error sintactico
 {}
 {
   argumentos() < tFIN_SENTENCIA >
 }
 
-void mientras_que():
+void mientras_que(): // Error sintactico
 {}
 {
   <tMQ> expresion() lista_sentencias() <tFMQ>
 }
 
-void seleccion():
+void seleccion(): // Error sintactico
 {}
 {
   <tSI> expresion() <tENT> lista_sentencias() ( <tSI_NO> lista_sentencias())? <tFSI>
 }
 
-void argumentos():
+void argumentos(): // Error sintactico
 {}
 {
   < tPARENTESIS_IZQ > ( lista_expresiones() )? < tPARENTESIS_DCH >
 }
 
-void lista_expresiones():
+void lista_expresiones(): // Error sintactico
 {}
 {
-  expresion() ("," expresion())*
+  expresion() (< tCOMA > expresion())*
 }
 
 void expresion():
@@ -497,19 +497,19 @@ void expresion():
   expresion_simple() ( operador_relacional() expresion_simple() )?
 }
 
-void operador_relacional():
+void operador_relacional(): // Error sintactico
 {}
 {
   <tIGUAL> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
 }
 
-void expresion_simple():
+void expresion_simple(): // Error sintactico
 {}
 {
-  ("+" | "-")? termino() ( operador_aditivo() termino() )*
+  (< tMAS > | < tMENOS >)? termino() ( operador_aditivo() termino() )*
 }
 
-void operador_aditivo():
+void operador_aditivo(): // Error sintactico
 {}
 {
 	< tMAS > | < tMENOS > | <tOR>
@@ -521,19 +521,19 @@ void termino():
   factor() ( operador_multiplicativo() factor() )*
 }
 
-void operador_multiplicativo():
+void operador_multiplicativo(): // Error sintactico
 {}
 {
   < tMUL > | <tDIV> | <tMOD> | <tAND>
 }
 
-void factor():
+void factor(): // Error sintactico
 {}
 {
 	<tNOT> factor()
-    | "(" expresion() ")"
-    | <tENTACAR> "(" expresion() ")"
-    | <tCARAENT> "(" expresion() ")"
+    | < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
+    | <tENTACAR> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
+    | <tCARAENT> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
     | <tIDENTIFICADOR>
     | <tCONSTENTERA>
     | <tCONSTCHAR>
