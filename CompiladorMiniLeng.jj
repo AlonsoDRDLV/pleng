@@ -11,14 +11,18 @@ options
 
 PARSER_BEGIN(CompiladorMiniLeng)
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class CompiladorMiniLeng
 {
   public static void main(String args []) throws ParseException
   {
     //CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
-    CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
-	System.out.println("Leyendo de la entrada estandar...");
+	//System.out.println("Leyendo de la entrada estandar...");
     try { 
+    	CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
+		System.out.println("Leyendo de la entrada estandar...");
     	CompiladorMiniLeng.programa();
     	System.out.println("Analizado correctamente");
     }
@@ -42,7 +46,15 @@ public class CompiladorMiniLeng
 		System.out.println("Error sintáctico!");
         System.out.println(e.getMessage());
         CompiladorMiniLeng.ReInit(System.in);
-	} 
+	}
+	catch (FileNotFoundException e) {
+	  System.out.println("Ha ocurrido un error al intentar leer el fichero: "
+	  	+ args[0]);
+	  System.out.println(e.getMessage());
+	}
+	catch (Exception e) {
+	  System.out.println(e.getMessage());
+	}
     catch (Error e) {
         System.out.println("Oops.");
         System.out.println(e.getMessage());
