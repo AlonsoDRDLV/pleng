@@ -11,16 +11,25 @@ options
 
 PARSER_BEGIN(CompiladorMiniLeng)
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 public class CompiladorMiniLeng
 {
   public static void main(String args []) throws ParseException
   {
-    CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
-	System.out.println("Leyendo de la entrada estandar...");
     try { 
+    	CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
+    	//CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+		System.out.println("Leyendo de la entrada estandar...");
     	CompiladorMiniLeng.programa();
     	System.out.println("Analizado correctamente");
     }
+	catch (FileNotFoundException e) {
+	  System.out.println("Ha ocurrido un error al intentar leer el fichero: "
+	  	+ args[0]);
+	  System.out.println(e.getMessage());
+	}
     catch (Exception e) {
 		System.out.println("NOK.");
         System.out.println(e.getMessage());
@@ -34,6 +43,7 @@ public class CompiladorMiniLeng
 }
 
 PARSER_END(CompiladorMiniLeng)
+
 
 SKIP :
 {
@@ -107,7 +117,13 @@ TOKEN : /*  */
 TOKEN: /* E/S */
 {
   < tESCRIBIR : "escribir" >
+  {
+    System.out.println("escribir");
+  }
 | < tLEER : "leer" >
+{
+    System.out.println("leer");
+  }
 }
 
 TOKEN : /* Operador multiplicativo  */
@@ -274,7 +290,7 @@ TOKEN : /* VALORES */
   {
     System.out.println("IDENTIFICADOR (Caracter : " + matchedToken + ")");
   }
-| < tCONSTCAD : "\"" (< LETRA >)* "\"">
+| < tCONSTCAD : "\"" (~["\""])* "\"">
   {
     System.out.println("IDENTIFICADOR (Cadena : " + matchedToken + ")");
   }
@@ -294,6 +310,7 @@ int programa() :
 	| < tLLAVE_IZQ >
 	| < tLLAVE_DCHA >
 	| < tCONSTENTERA >
+	| < tENTACAR >
 	| < tIDENTIFICADOR >
 	| < tCOMA >
 	| < tOPAS >
@@ -308,7 +325,7 @@ int programa() :
 	| < tVAL >
 	| < tACCION >
 	| < tCARAENT >
-	| < tENTACAR >
+	
 	| < tFALSE >
 	| < tTRUE >
 	| < tDIV >
@@ -327,6 +344,13 @@ int programa() :
 	| < tMAS >
 	| < tMENOS >
 	| < tMUL >
+	| < tPROGRAMA >
+	| < tESCRIBIR >
+	| < tLEER >
+	| < tOR >
+	| < tNOT >
+	| < tPARENTESIS_IZQ >
+	| < tPARENTESIS_DCH >
 )+
   {
     return 0;
