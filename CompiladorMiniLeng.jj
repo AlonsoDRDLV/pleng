@@ -15,7 +15,8 @@ public class CompiladorMiniLeng
 {
   public static void main(String args []) throws ParseException
   {
-    CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+    //CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+    CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
 	System.out.println("Leyendo de la entrada estandar...");
     try { 
     	CompiladorMiniLeng.programa();
@@ -23,8 +24,17 @@ public class CompiladorMiniLeng
     }
     catch (TokenMgrError e) {
 		//Error léxico
-		System.out.println("Error léxico!.");
-        System.out.println(e.getMessage());
+		try {
+			System.out.println("ERROR LÉXICO ("
+			+ SimpleCharStream.getBeginLine()
+			+ ", "
+			+ SimpleCharStream.getBeginColumn()
+			+ "): Símbolo no reconocido: "
+			+ SimpleCharStream.readChar()
+			);
+		} catch (Exception ex) {
+			//
+		}
 	}
 	catch (ParseException e) {
 		//Error sintáctico
@@ -271,7 +281,7 @@ TOKEN : /* VALORES */
 {
   < #DIGITO : ["0"-"9"] >
 | < #LETRA : ["a"-"z","_","0"-"9"] >
-| < tCONSTENTERA : ("-")?(< DIGITO >)+ >
+| < tCONSTENTERA : (< DIGITO >)+ >
   {
     System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
   }
@@ -292,7 +302,7 @@ TOKEN : /* VALORES */
 void programa ():
 {}
 {
-  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion() declaracion_acciones() bloque_sentencias()
+  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion() declaracion_acciones() bloque_sentencias() < EOF >
 }
 
 void declaracion_variables():
