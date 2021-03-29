@@ -1,0 +1,334 @@
+/**
+ * 	Autores:f
+ *	Fecha ultima revision:
+ * 	Comentarios:
+ */
+options
+{
+  static = true;
+  ignore_case = true;
+}
+
+PARSER_BEGIN(CompiladorMiniLeng)
+
+public class CompiladorMiniLeng
+{
+  public static void main(String args []) throws ParseException
+  {
+    CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+	System.out.println("Leyendo de la entrada estandar...");
+    try { 
+    	CompiladorMiniLeng.programa();
+    	System.out.println("Analizado correctamente");
+    }
+    catch (Exception e) {
+		System.out.println("NOK.");
+        System.out.println(e.getMessage());
+        CompiladorMiniLeng.ReInit(System.in);
+	}
+    catch (Error e) { 
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+	}
+  }
+}
+
+PARSER_END(CompiladorMiniLeng)
+
+SKIP :
+{
+  " "
+| < "%%" (~["%"])* "%%">
+| <"%" (~["\n", "\r"])*>
+| "\r"
+| "\t"
+| "\n"
+
+}
+
+TOKEN : /* AGRUPACIONES */
+{
+  <  tLLAVE_IZQ : "{" >
+  {
+    System.out.println("LLAVE_IZQ");
+  }
+| <  tLLAVE_DCHA : "}" >
+  {
+    System.out.println("LLAVE_DCHA");
+  }
+}
+
+// ADICION NUESTRA.
+
+TOKEN : /*  */
+{
+  < tPROGRAMA : "programa">
+  {
+    System.out.println("programa");
+  }
+| < tVAR : "var">
+  {
+    System.out.println("var");
+  }
+| < tPRINCIPIO : "principio">
+  {
+    System.out.println("principio");
+  }
+| < tFIN : "fin">
+  {
+    System.out.println("fin");
+  }
+| < tSI: "si" >
+  {
+    System.out.println("si");
+  }
+| < tENT: "ent" >
+  {
+    System.out.println("ent");
+  }
+| < tSI_NO: "si_no" >
+  {
+    System.out.println("si_no");
+  }
+| < tFSI : "fsi">
+  {
+    System.out.println("fsi");
+  }
+| < tMQ : "mq" >
+  {
+    System.out.println("mq");
+  }
+| < tFMQ : "fmq" >
+  {
+    System.out.println("fmq");
+  }
+}
+
+TOKEN: /* E/S */
+{
+  < tESCRIBIR : "escribir" >
+| < tLEER : "leer" >
+}
+
+TOKEN : /* Operador multiplicativo  */
+{
+  < tAND : "and" >
+  {
+    System.out.println("AND");
+  }
+| < tMOD : "mod" >
+{
+  System.out.println("MOD");
+}
+| < tOR : "or" >
+{
+  System.out.println("OR");
+}
+| < tNOT : "not" >
+{
+  System.out.println("NOT");
+}
+}
+
+TOKEN : /*tipo_variables */
+{
+  < tENTERO : "entero" >
+  {
+    System.out.println("ENTERO");
+  }
+| < tBOOLEANO : "booleano" >
+{
+  System.out.println("BOOLEANO");
+}
+| < tCARACTER : "caracter" >
+{
+  System.out.println("CARACTER");
+}
+}
+
+TOKEN : /*valor booleano*/
+{
+  < tTRUE : "true" >
+  {
+    System.out.println("TRUE");
+  }
+| < tFALSE : "false" >
+{
+  System.out.println("FALSE");
+} 
+}
+
+TOKEN : /* conversion de tipo entero y caracter */
+{
+  < tENTACAR : "entacar" >
+  {
+    System.out.println("ENTACAR");
+  }
+| < tCARAENT : "caraent" >
+{
+  System.out.println("CARAENT");
+}
+}
+
+TOKEN: /* accion */
+{
+  < tACCION : "accion" >
+  {
+    System.out.println("ACCION");
+  }
+}
+
+TOKEN : /* clase_parametros */
+{
+  < tVAL : "val" >
+  {
+    System.out.println("VAL");
+  }
+| < tREF : "ref" >
+{
+  System.out.println("REF");
+}
+}
+
+TOKEN : /* operador_relacional */
+{
+  < tMAYOR : ">" >
+  {
+    System.out.println(">");
+  }
+| < tMENOR : "<" >
+{
+  System.out.println("<");
+}
+| < tIGUAL : "=" >
+{
+  System.out.println("=");
+}
+| < tMAI : ">=" >
+{
+  System.out.println(">=");
+}
+| < tMEI : "<=" >
+{
+  System.out.println("<=");
+}
+| < tNI : "<>" >
+{
+  System.out.println("<>");
+}
+}
+
+TOKEN : /* otros */
+{
+	< tOPAS : ":=" >
+{
+  System.out.println(":=");
+}
+| < tFIN_SENTENCIA : ";" >
+  {
+    System.out.println("FIN_SENTENCIA");
+  }
+| < tCOMA : "," >
+  {
+  	System.out.println("coma");
+  }
+| < tPARENTESIS_IZQ : "(" >
+  {
+    System.out.println("(");
+  }
+| < tPARENTESIS_DCH : ")" >
+  {
+    System.out.println(")");
+  }
+}
+
+TOKEN: /* Operadores aritméticos */
+{
+  < tMAS : "+">
+  {
+    System.out.println("MAS");
+  }
+| < tMENOS : "-" >
+  {
+    System.out.println("MENOS");
+  }
+| < tDIV : "/" >
+  {
+    System.out.println("/");
+  }
+| < tMUL : "*" >
+  {
+    System.out.println("*");
+  }
+}
+
+TOKEN : /* VALORES */
+{
+  < #DIGITO : ["0"-"9"] >
+| < #LETRA : ["a"-"z","_","0"-"9"] >
+| < tCONSTENTERA : ("-")?(< DIGITO >)+ >
+  {
+    System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
+  }
+| < tCONSTCHAR : "\"" < LETRA > "\"">
+  {
+    System.out.println("IDENTIFICADOR (Caracter : " + matchedToken + ")");
+  }
+| < tCONSTCAD : "\"" (< LETRA >)* "\"">
+  {
+    System.out.println("IDENTIFICADOR (Cadena : " + matchedToken + ")");
+  }
+| <  tIDENTIFICADOR : (["a"-"z"] | ("_")+ (["a"-"z","0"-"9"])) (["a"-"z", "0"-"9"] | ( ("_")+ (["a"-"z","0"-"9"]) ) )* >
+  {
+    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
+  }
+}
+
+int programa() :
+{}
+{
+(
+	< tENTERO >
+	| < tCARACTER >
+	| < tBOOLEANO >
+	| < tLLAVE_IZQ >
+	| < tLLAVE_DCHA >
+	| < tCONSTENTERA >
+	| < tIDENTIFICADOR >
+	| < tCOMA >
+	| < tOPAS >
+	| < tFIN_SENTENCIA >
+	| < tNI >
+	| < tMEI >
+	| < tMAI >
+	| < tIGUAL >
+	| < tMENOR >
+	| < tMAYOR >
+	| < tREF >
+	| < tVAL >
+	| < tACCION >
+	| < tCARAENT >
+	| < tENTACAR >
+	| < tFALSE >
+	| < tTRUE >
+	| < tDIV >
+	| < tMOD >
+	| < tAND >
+	| < tCONSTCHAR >
+	| < tCONSTCAD >
+	| < tPRINCIPIO >
+	| < tFIN >
+	| < tSI>
+	| < tENT >
+	| < tSI_NO >
+	| < tFSI >
+	| < tMQ >
+	| < tFMQ >
+	| < tMAS >
+	| < tMENOS >
+	| < tMUL >
+)+
+  {
+    return 0;
+  }
+}
