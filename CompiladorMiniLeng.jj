@@ -70,12 +70,8 @@ public class CompiladorMiniLeng
         		maxSize = expectedTokenSequences[i].length;
       		}
       		for (int j = 0; j < expectedTokenSequences[i].length; j++) {
-        		expected.append(tokenImage[expectedTokenSequences[i][j]]).append(' ');
+        		expected.append(tokenImage[expectedTokenSequences[i][j]]).append(", ");
       		}
-      		if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0) {
-        		expected.append("...");
-      		}
-      		expected.append(eol).append("    ");
     	}
     	Token t = currentToken.next;
 		System.out.println("ERROR SINTÁCTICO ("
@@ -231,7 +227,7 @@ void declaracion_variables():
 {}
 {
   	try {
-		( declaracion() < tCOMA > )*
+		( declaracion() < tFIN_SENTENCIA > )*
 	}
     catch (ParseException e) {
       	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
@@ -248,7 +244,7 @@ void identificadores(): // Error sintactico
 {}
 {
   	try {
-  	  <tIDENTIFICADOR> ( "," <tIDENTIFICADOR> )*
+  	  <tIDENTIFICADOR> ( < tCOMA > <tIDENTIFICADOR> )*
   	}
   	catch (ParseException e) {
       	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
@@ -287,7 +283,7 @@ void cabecera_accion(): // Error sintactico
 {}
 {
   	try {
-  	  <tACCION> <tIDENTIFICADOR> ( parametros_formales() )?
+  	  <tACCION> <tIDENTIFICADOR> ( parametros_formales() )
   	}
   	catch (ParseException e) {
       	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
@@ -298,7 +294,7 @@ void parametros_formales() : // Error sintactico
 {}
 {
   	try {
-  	  < tPARENTESIS_IZQ > parametros() < tPARENTESIS_DCH > < tFIN_SENTENCIA>
+  		( < tPARENTESIS_IZQ > (parametros() (< tFIN_SENTENCIA > parametros() )*)? < tPARENTESIS_DCH > )?
   	}
   	catch (ParseException e) {
       	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
@@ -309,26 +305,29 @@ void lista_parametros(): // Error sintactico
 {}
 {
   	try {
-  	  <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)* 
+  	  <tIDENTIFICADOR> (< tCOMA > <tIDENTIFICADOR>)* 
   	}
   	catch (ParseException e) {
       	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
 	}
 }
 
-void parametros(): // Error sintactico
+void parametros():
 {}
 {
-	try {
-  	  	  < tVAL > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
-		| < tREF > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
-	}
+	clase_parametros() tipo_variables() lista_parametros()
 }
 
-
+void clase_parametros():
+{}
+{
+  	try {
+  	  	<tVAL> | <tREF>
+  	}
+  	catch (ParseException e) {
+  	  	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+  	}
+}
 
 void bloque_sentencias(): // Error sintactico
 {}
@@ -423,7 +422,7 @@ void invocacion_accion(): // Error sintactico
 {}
 {
   	try {
-  	  argumentos() < tFIN_SENTENCIA >
+  	  (argumentos())? < tFIN_SENTENCIA >
   	}
   	catch (ParseException e) {
       	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
