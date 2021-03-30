@@ -76,10 +76,6 @@ TOKEN : /*  */
   {
     System.out.println("programa");
   }
-| < tVAR : "var">
-  {
-    System.out.println("var");
-  }
 | < tPRINCIPIO : "principio">
   {
     System.out.println("principio");
@@ -282,11 +278,11 @@ TOKEN : /* VALORES */
 {
   < #DIGITO : ["0"-"9"] >
 | < #LETRA : ["a"-"z","_","0"-"9"] >
-| < tCONSTENTERA : ("-")?(< DIGITO >)+ >
+| < tCONSTENTERA : (< DIGITO >)+ >
   {
     System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
   }
-| < tCONSTCHAR : "\"" < LETRA > "\"">
+| < tCONSTCHAR : "\"" ~["\""] "\"">
   {
     System.out.println("IDENTIFICADOR (Caracter : " + matchedToken + ")");
   }
