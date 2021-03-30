@@ -61,36 +61,18 @@ public class CompiladorMiniLeng
 	}
   }
 
-  static void error_sintactico(Token currentToken, int[][] expectedTokenSequences, String[] tokenImage) {
-    	String eol = System.getProperty("line.separator", "\n");
-      	StringBuffer expected = new StringBuffer();
-      	int maxSize = 0;
-		for (int i = 0; i < expectedTokenSequences.length; i++) {
-      		if (maxSize < expectedTokenSequences[i].length) {
-        		maxSize = expectedTokenSequences[i].length;
-      		}
-      		for (int j = 0; j < expectedTokenSequences[i].length; j++) {
-        		expected.append(tokenImage[expectedTokenSequences[i][j]]).append(", ");
-      		}
-    	}
-    	Token t = currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
-		+ currentToken.next.beginLine
-		+ ", "
-		+ currentToken.next.beginColumn
-		+ ") : "
-		+ " Se ha encontrado un token "
-		+ tokenImage[t.kind]
-		+ " "
-		+ currentToken.next.image
-		+ ", se esperaba: "
-		+ expected
-		);
-		
-		//System.out.println(e.toString());
-		do {
-		t = getNextToken();
-		} while (t.kind != tFIN_SENTENCIA && t!=null && t.kind != EOF );
+  static String expectedTokens(int[][] expectedTokenSequences, String[] tokenImage) {
+  	StringBuffer expected = new StringBuffer();
+  	int maxSize = 0;
+	for (int i = 0; i < expectedTokenSequences.length; i++) {
+  		if (maxSize < expectedTokenSequences[i].length) {
+    		maxSize = expectedTokenSequences[i].length;
+  		}
+  		for (int j = 0; j < expectedTokenSequences[i].length; j++) {
+    		expected.append(tokenImage[expectedTokenSequences[i][j]]).append(", ");
+  		}
+	}
+	return expected.toString();
   }
 }
 
@@ -197,7 +179,7 @@ TOKEN: /* Operadores aritmÃ©ticos */
 {
   < tMAS : "+">
 | < tMENOS : "-" >
-| < tDIV : "/" >
+| < tDIV : "div" >
 | < tMUL : "*" >
 }
 
@@ -215,12 +197,28 @@ void programa ():
 {}
 {
 	try {
-	  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion() declaracion_acciones() bloque_sentencias() < EOF >
+	  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion_variables() declaracion_acciones() bloque_sentencias() < EOF >
 	}
     catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+		Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En la declaración de programa, "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+      	
+     	do {
+		t = getNextToken();
+		} while (t!=null && t.kind != EOF );
 	}
-  
 }
 
 void declaracion_variables():
@@ -229,26 +227,38 @@ void declaracion_variables():
   	try {
 		( declaracion() < tFIN_SENTENCIA > )*
 	}
-    catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+    catch (ParseException e) {	      
+		Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En la declaración de variables, "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+		
+      	do {
+		t = getNextToken();
+		} while (t.kind != tFIN_SENTENCIA && t!=null && t.kind != EOF );
 	}
 }
 
 void declaracion ():
 {}
 {
-  tipo_variables() identificadores()
+  	  tipo_variables() identificadores()
 }
 
 void identificadores(): // Error sintactico
 {}
 {
-  	try {
-  	  <tIDENTIFICADOR> ( < tCOMA > <tIDENTIFICADOR> )*
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
-	}
+  <tIDENTIFICADOR> ( < tCOMA > <tIDENTIFICADOR> )*
 }
 
 void tipo_variables(): // Error sintactico
@@ -258,7 +268,18 @@ void tipo_variables(): // Error sintactico
   	  <tENTERO> | <tCARACTER> | <tBOOLEANO>
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+			+ e.currentToken.next.beginLine
+			+ ", "
+			+ e.currentToken.next.beginColumn
+			+ ") : "
+			+ "Se ha encontrado "
+			+ e.tokenImage[t.kind]
+			+ " "
+			+ e.currentToken.next.image
+			+ ", se esperaba un tipo de varibles: \"entero\", \"caracter\" o \" booleano\""
+			);
 	}
 }
 
@@ -272,44 +293,68 @@ void declaracion_accion(): // Error sintactico
 {}
 {
   	try {
-  	  cabecera_accion() < tFIN_SENTENCIA > declaracion() declaracion_acciones() bloque_sentencias()
+  	  cabecera_accion() < tFIN_SENTENCIA > declaracion_variables() declaracion_acciones() bloque_sentencias()
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "No se ha declarado correctamente la acción, "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+		
+      	do {
+		t = getNextToken();
+		} while (t.kind != tFIN_SENTENCIA && t!=null && t.kind != EOF );
 	}
 }
 
 void cabecera_accion(): // Error sintactico
 {}
 {
-  	try {
-  	  <tACCION> <tIDENTIFICADOR> ( parametros_formales() )
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
-	}
+  <tACCION> <tIDENTIFICADOR> ( parametros_formales() )
 }
 
-void parametros_formales() : // Error sintactico
+void parametros_formales() :
 {}
 {
   	try {
   		( < tPARENTESIS_IZQ > (parametros() (< tFIN_SENTENCIA > parametros() )*)? < tPARENTESIS_DCH > )?
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "Los parametros de la cabecera de la acción son incorrectos, "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+		
+      	do {
+		t = getNextToken();
+		} while (t.kind != tPARENTESIS_DCH && t!=null && t.kind != EOF );
 	}
 }
 
 void lista_parametros(): // Error sintactico
 {}
 {
-  	try {
-  	  <tIDENTIFICADOR> (< tCOMA > <tIDENTIFICADOR>)* 
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
-	}
+  	<tIDENTIFICADOR> (< tCOMA > <tIDENTIFICADOR>)* 
 }
 
 void parametros():
@@ -325,19 +370,46 @@ void clase_parametros():
   	  	<tVAL> | <tREF>
   	}
   	catch (ParseException e) {
-  	  	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+  	  	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "Se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba una clase del parametro: val o ref"
+		);
   	}
 }
 
 void bloque_sentencias(): // Error sintactico
 {}
 {
-  	
   	try {
   	 	<tPRINCIPIO> lista_sentencias() <tFIN>
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En un bloque de sentencias "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+		
+      	do {
+		t = getNextToken();
+		} while (t.kind != tFIN && t!=null && t.kind != EOF );
 	}
 }
 
@@ -353,12 +425,29 @@ void sentencia(): // Error sintactico
 	try {
   	    leer() < tFIN_SENTENCIA >
 		| escribir() < tFIN_SENTENCIA >
-		| <tIDENTIFICADOR> asig_incaccion()
+		| <tIDENTIFICADOR> asig_incaccion() < tFIN_SENTENCIA >
 		| seleccion()
 		| mientras_que()
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+  	  Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En sentencia, "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+		
+      	do {
+		t = getNextToken();
+		} while (t.kind != tFIN_SENTENCIA && t!=null && t.kind != EOF );
 	}
 }
 
@@ -369,7 +458,24 @@ void leer(): // Error sintactico
   	  <tLEER> <tPARENTESIS_IZQ > lista_asignables() < tPARENTESIS_DCH >
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En la sentencia leer "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+		
+      	do {
+		t = getNextToken();
+		} while (t.kind != tPARENTESIS_DCH && t!=null && t.kind != EOF );
 	}
 }
 
@@ -380,7 +486,7 @@ void lista_asignables(): // Error sintactico
   	  <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)*
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	
 	}
 }
 
@@ -397,7 +503,24 @@ void escribir(): // Error sintactico
   	  <tESCRIBIR> <tPARENTESIS_IZQ> lista_escribibles() <tPARENTESIS_DCH>
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En la sentencia escribir "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+		
+      	do {
+		t = getNextToken();
+		} while (t.kind != tPARENTESIS_DCH && t!=null && t.kind != EOF );
 	}
 }
 
@@ -410,23 +533,14 @@ void asig_incaccion():
 void asignacion(): // Error sintactico
 {}
 {
-  	try {
-  	  <tOPAS> expresion() < tFIN_SENTENCIA >
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
-	}
+  	<tOPAS> expresion()
+      
 }
 
 void invocacion_accion(): // Error sintactico
 {}
 {
-  	try {
-  	  (argumentos())? < tFIN_SENTENCIA >
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
-	}
+  	  (argumentos())?
 }
 
 void mientras_que(): // Error sintactico
@@ -436,7 +550,24 @@ void mientras_que(): // Error sintactico
   	  <tMQ> expresion() lista_sentencias() <tFMQ>
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En la cabecera de mq, "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+		
+      	do {
+		t = getNextToken();
+		} while (t.kind != tFMQ && t!=null && t.kind != EOF );
 	}
 }
 
@@ -444,10 +575,27 @@ void seleccion(): // Error sintactico
 {}
 {
   	try {
-  	  <tSI> expresion() <tENT> lista_sentencias() ( <tSI_NO> lista_sentencias())? <tFSI>
+  	  	<tSI> expresion() <tENT> lista_sentencias() ( <tSI_NO> lista_sentencias())? <tFSI>
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+  	  	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En seleccion, "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+
+      	do {
+		t = getNextToken();
+		} while (t.kind != tFSI && t!=null && t.kind != EOF );
 	}
 }
 
@@ -458,19 +606,31 @@ void argumentos(): // Error sintactico
   	  < tPARENTESIS_IZQ > ( lista_expresiones() )? < tPARENTESIS_DCH >
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+		Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "En la declaración de argumentos, "
+		+ "se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba: "
+		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
+		);
+
+      	do {
+		t = getNextToken();
+		} while (t.kind != tPARENTESIS_DCH && t!=null && t.kind != EOF );
 	}
 }
 
 void lista_expresiones(): // Error sintactico
 {}
 {
-  	try {
-  	  expresion() (< tCOMA > expresion())*
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
-	}
+  	  expresion() (< tCOMA > expresion())* // expresion ,? expresion
 }
 
 void expresion():
@@ -483,22 +643,28 @@ void operador_relacional(): // Error sintactico
 {}
 {
   	try {
-  	  <tIGUAL> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+  		<tIGUAL> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
+	}
+	catch (ParseException e) {
+	  Token t = e.currentToken.next;
+	  System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "Se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba un operador relacional: =,<>,<,>,<=,>="
+		);
 	}
 }
 
 void expresion_simple(): // Error sintactico
 {}
 {
-  	try {
-  	  (< tMAS > | < tMENOS >)? termino() ( operador_aditivo() termino() )*
-  	}
-  	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
-	}
+  (< tMAS > | < tMENOS >)? termino() ( operador_aditivo() termino() )*
 }
 
 void operador_aditivo(): // Error sintactico
@@ -508,7 +674,18 @@ void operador_aditivo(): // Error sintactico
 	  < tMAS > | < tMENOS > | <tOR>
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      Token t = e.currentToken.next;
+	  System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "Se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba un operador relacional: =,<>,<,>,<=,>="
+		);
 	}
 }
 
@@ -525,7 +702,18 @@ void operador_multiplicativo(): // Error sintactico
   	  < tMUL > | <tDIV> | <tMOD> | <tAND>
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+	  System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "Se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba un operador multiplicativo: *,div,mod,>,and"
+		);
 	}
 }
 
@@ -545,6 +733,23 @@ void factor(): // Error sintactico
     | <tFALSE>
   	}
   	catch (ParseException e) {
-      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+      	Token t = e.currentToken.next;
+	  System.out.println("ERROR SINTÁCTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "Se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba un factor"
+		);
+
+		do {
+		t = getNextToken();
+		} while (t.kind != tPARENTESIS_DCH && t.kind != tIDENTIFICADOR && t.kind != tCONSTENTERA
+			&& t.kind != tCONSTCHAR && t.kind != tCONSTCAD && t.kind != tTRUE && t.kind != tFALSE
+			&& t!=null && t.kind != EOF );
 	}
 }
