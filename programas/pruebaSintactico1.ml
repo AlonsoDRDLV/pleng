@@ -41,7 +41,8 @@ Fin
 
 %-----------------------------------------------------------
 Principio
-        dato;
+	%Error 5: falta la coma entre a y b 
+        dato(a b);
         a := d;
         dato;
         b := d;
