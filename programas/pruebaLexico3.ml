@@ -19,7 +19,7 @@ principio
  en un error contenido en este
  prñmós := 6;
  %%
- 
- %%Un comentario multilinea no cerrado implica que la lectura no acaba
- (se ignora EOF)
+
 fin
+%Un comentario monolinea al final del fichero no impide el fin del análisis
+%En cuanto lee EOF el analizador se detiene.

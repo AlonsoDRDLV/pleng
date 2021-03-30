@@ -1,7 +1,9 @@
+%Prueba 1: reconoce todos los tokens del lenguaje. También se comprueba
+%que las lineas de la 6 a la 32 primeros son leidos como palabras reservadas 
+%y no como identificadores.
 {
 }
 programa
-var
 principio
 fin
 si
@@ -41,3 +43,7 @@ ref
 -
 /
 *
+12
+"a"
+"aaaa"
+aaaaa
