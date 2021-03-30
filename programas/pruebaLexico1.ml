@@ -1,5 +1,5 @@
 %Prueba 1: reconoce todos los tokens del lenguaje. También se comprueba
-%que las lineas de la 6 a la 32 primeros son leidos como palabras reservadas 
+%que las lineas de la 6 a la 31 primeros son leidos como palabras reservadas 
 %y no como identificadores.
 {
 }
@@ -28,6 +28,7 @@ caraent
 accion
 val
 ref
+div
 >
 <
 =
@@ -41,7 +42,6 @@ ref
 )
 +
 -
-/
 *
 12
 "a"
