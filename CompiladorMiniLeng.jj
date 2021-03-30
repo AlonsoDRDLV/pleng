@@ -18,11 +18,11 @@ public class CompiladorMiniLeng
 {
   public static void main(String args []) throws ParseException
   {
-    //CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
-	//System.out.println("Leyendo de la entrada estandar...");
+    CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+	System.out.println("Leyendo de la entrada estandar...");
     try { 
-    	CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
-		System.out.println("Leyendo de la entrada estandar...");
+    	//CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
+		//System.out.println("Leyendo de la entrada estandar...");
     	CompiladorMiniLeng.programa();
     	System.out.println("Analizado correctamente");
     }
@@ -33,8 +33,8 @@ public class CompiladorMiniLeng
 			+ SimpleCharStream.getBeginLine()
 			+ ", "
 			+ SimpleCharStream.getBeginColumn()
-			+ "): Símbolo no reconocido: "
-			+ SimpleCharStream.readChar()
+			+ "): Símbolo no reconocido: \""
+			+ SimpleCharStream.readChar() + "\""
 			);
 		} catch (Exception ex) {
 			// Excepcion por readChar
@@ -47,11 +47,11 @@ public class CompiladorMiniLeng
         System.out.println(e.getMessage());
         CompiladorMiniLeng.ReInit(System.in);
 	}
-	catch (FileNotFoundException e) {
+	/*catch (FileNotFoundException e) {
 	  System.out.println("Ha ocurrido un error al intentar leer el fichero: "
 	  	+ args[0]);
 	  System.out.println(e.getMessage());
-	}
+	}*/
 	catch (Exception e) {
 	  System.out.println(e.getMessage());
 	}
@@ -60,6 +60,42 @@ public class CompiladorMiniLeng
         System.out.println(e.getMessage());
 	}
   }
+
+  static void error_sintactico(Token currentToken, int[][] expectedTokenSequences, String[] tokenImage) {
+    	String eol = System.getProperty("line.separator", "\n");
+      	StringBuffer expected = new StringBuffer();
+      	int maxSize = 0;
+		for (int i = 0; i < expectedTokenSequences.length; i++) {
+      		if (maxSize < expectedTokenSequences[i].length) {
+        		maxSize = expectedTokenSequences[i].length;
+      		}
+      		for (int j = 0; j < expectedTokenSequences[i].length; j++) {
+        		expected.append(tokenImage[expectedTokenSequences[i][j]]).append(' ');
+      		}
+      		if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0) {
+        		expected.append("...");
+      		}
+      		expected.append(eol).append("    ");
+    	}
+    	Token t = currentToken.next;
+		System.out.println("ERROR SINTÁCTICO ("
+		+ currentToken.next.beginLine
+		+ ", "
+		+ currentToken.next.beginColumn
+		+ ") : "
+		+ " Se ha encontrado un token "
+		+ tokenImage[t.kind]
+		+ " "
+		+ currentToken.next.image
+		+ ", se esperaba: "
+		+ expected
+		);
+		
+		//System.out.println(e.toString());
+		do {
+		t = getNextToken();
+		} while (t.kind != tFIN_SENTENCIA && t!=null && t.kind != EOF );
+  }
 }
 
 PARSER_END(CompiladorMiniLeng)
@@ -67,23 +103,19 @@ PARSER_END(CompiladorMiniLeng)
 SKIP :
 {
   " "
+| < "%%" (~["%"])* "%%">
+| <"%" (~["\n", "\r"])*>
 | "\r"
 | "\t"
 | "\n"
-| <"%" (~["\n", "\r"])*>
-| <"%%" (~[])* "%%">
 }
+
+
 
 TOKEN : /* AGRUPACIONES */
 {
   <  tLLAVE_IZQ : "{" >
-  {
-    System.out.println("LLAVE_IZQ");
-  }
 | <  tLLAVE_DCHA : "}" >
-  {
-    System.out.println("LLAVE_DCHA");
-  }
 }
 
 // ADICION NUESTRA.
@@ -91,45 +123,14 @@ TOKEN : /* AGRUPACIONES */
 TOKEN : /*  */
 {
   < tPROGRAMA : "programa">
-  {
-    System.out.println("programa");
-  }
-| < tVAR : "var">
-  {
-    System.out.println("var");
-  }
 | < tPRINCIPIO : "principio">
-  {
-    System.out.println("principio");
-  }
 | < tFIN : "fin">
-  {
-    System.out.println("fin");
-  }
 | < tSI: "si" >
-  {
-    System.out.println("si");
-  }
 | < tENT: "ent" >
-  {
-    System.out.println("ent");
-  }
 | < tSI_NO: "si_no" >
-  {
-    System.out.println("si_no");
-  }
 | < tFSI : "fsi">
-  {
-    System.out.println("fsi");
-  }
 | < tMQ : "mq" >
-  {
-    System.out.println("mq");
-  }
 | < tFMQ : "fmq" >
-  {
-    System.out.println("fmq");
-  }
 }
 
 TOKEN: /* E/S */
@@ -141,153 +142,67 @@ TOKEN: /* E/S */
 TOKEN : /* Operador multiplicativo  */
 {
   < tAND : "and" >
-  {
-    System.out.println("AND");
-  }
 | < tMOD : "mod" >
-{
-  System.out.println("MOD");
-}
 | < tOR : "or" >
-{
-  System.out.println("OR");
-}
 | < tNOT : "not" >
-{
-  System.out.println("NOT");
-}
 }
 
 TOKEN : /*tipo_variables */
 {
   < tENTERO : "entero" >
-  {
-    System.out.println("ENTERO");
-  }
 | < tBOOLEANO : "booleano" >
-{
-  System.out.println("BOOLEANO");
-}
 | < tCARACTER : "caracter" >
-{
-  System.out.println("CARACTER");
-}
 }
 
 TOKEN : /*valor booleano*/
 {
   < tTRUE : "true" >
-  {
-    System.out.println("TRUE");
-  }
 | < tFALSE : "false" >
-{
-  System.out.println("FALSE");
-} 
 }
 
 TOKEN : /* conversion de tipo entero y caracter */
 {
   < tENTACAR : "entacar" >
-  {
-    System.out.println("ENTACAR");
-  }
 | < tCARAENT : "caraent" >
-{
-  System.out.println("CARAENT");
-}
 }
 
 TOKEN: /* accion */
 {
   < tACCION : "accion" >
-  {
-    System.out.println("ACCION");
-  }
 }
 
 TOKEN : /* clase_parametros */
 {
   < tVAL : "val" >
-  {
-    System.out.println("VAL");
-  }
 | < tREF : "ref" >
-{
-  System.out.println("REF");
-}
 }
 
 TOKEN : /* operador_relacional */
 {
   < tMAYOR : ">" >
-  {
-    System.out.println(">");
-  }
 | < tMENOR : "<" >
-{
-  System.out.println("<");
-}
 | < tIGUAL : "=" >
-{
-  System.out.println("=");
-}
 | < tMAI : ">=" >
-{
-  System.out.println(">=");
-}
 | < tMEI : "<=" >
-{
-  System.out.println("<=");
-}
 | < tNI : "<>" >
-{
-  System.out.println("<>");
-}
+
 }
 
 TOKEN : /* otros */
 {
-	< tOPAS : ":=" >
-{
-  System.out.println(":=");
-}
+  < tOPAS : ":=" >
 | < tFIN_SENTENCIA : ";" >
-  {
-    System.out.println("FIN_SENTENCIA");
-  }
 | < tCOMA : "," >
-  {
-  	System.out.println("coma");
-  }
 | < tPARENTESIS_IZQ : "(" >
-  {
-    System.out.println("(");
-  }
 | < tPARENTESIS_DCH : ")" >
-  {
-    System.out.println(")");
-  }
 }
 
-TOKEN: /* Operadores aritméticos */
+TOKEN: /* Operadores aritmÃ©ticos */
 {
   < tMAS : "+">
-  {
-    System.out.println("MAS");
-  }
 | < tMENOS : "-" >
-  {
-    System.out.println("MENOS");
-  }
 | < tDIV : "/" >
-  {
-    System.out.println("/");
-  }
 | < tMUL : "*" >
-  {
-    System.out.println("*");
-  }
 }
 
 TOKEN : /* VALORES */
@@ -295,21 +210,9 @@ TOKEN : /* VALORES */
   < #DIGITO : ["0"-"9"] >
 | < #LETRA : ["a"-"z","_","0"-"9"] >
 | < tCONSTENTERA : (< DIGITO >)+ >
-  {
-    System.out.println("VALOR_ENTERO (Valor: " + matchedToken + ")");
-  }
-| < tCONSTCHAR : "\"" < LETRA > "\"">
-  {
-    System.out.println("IDENTIFICADOR (Caracter : " + matchedToken + ")");
-  }
-| < tCONSTCAD : "\"" (< LETRA >)* "\"">
-  {
-    System.out.println("IDENTIFICADOR (Cadena : " + matchedToken + ")");
-  }
+| < tCONSTCHAR : "\"" ~["\""] "\"">
+| < tCONSTCAD : "\"" (~["\""])* "\"">
 | <  tIDENTIFICADOR : (["a"-"z"] | ("_")+ (["a"-"z","0"-"9"])) (["a"-"z", "0"-"9"] | ( ("_")+ (["a"-"z","0"-"9"]) ) )* >
-  {
-    System.out.println("IDENTIFICADOR (Valor: " + matchedToken + ")");
-  }
 }
 
 void programa ():
@@ -319,23 +222,7 @@ void programa ():
 	  <tPROGRAMA> <tIDENTIFICADOR> <tFIN_SENTENCIA> declaracion() declaracion_acciones() bloque_sentencias() < EOF >
 	}
     catch (ParseException e) {
-      try {
-		System.out.println("ERROR SINTÁCTICO ("
-		+ e.currentToken.next.beginLine
-		+ ", "
-		+ e.currentToken.next.beginColumn
-		+ ") : "
-		+ e.currentToken.next.image
-		+ " "
-		+ e.expectedTokenSequences
-		);
-
-		Token t;
-		System.out.println(e.toString());
-		do {
-		t = getNextToken();
-		} while (t.kind != tFIN_SENTENCIA && t!=null && t.kind != EOF );
-	  } catch (Exception ex) {}
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
 	}
   
 }
@@ -343,7 +230,12 @@ void programa ():
 void declaracion_variables():
 {}
 {
-  ( declaracion() ";" )*
+  	try {
+		( declaracion() < tCOMA > )*
+	}
+    catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void declaracion ():
@@ -355,13 +247,23 @@ void declaracion ():
 void identificadores(): // Error sintactico
 {}
 {
-  <tIDENTIFICADOR> ( "," <tIDENTIFICADOR> )*
+  	try {
+  	  <tIDENTIFICADOR> ( "," <tIDENTIFICADOR> )*
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void tipo_variables(): // Error sintactico
 {}
 {
-   <tENTERO> | <tCARACTER> | <tBOOLEANO>
+  	try {
+  	  <tENTERO> | <tCARACTER> | <tBOOLEANO>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void declaracion_acciones():
@@ -373,32 +275,57 @@ void declaracion_acciones():
 void declaracion_accion(): // Error sintactico
 {}
 {
-  cabecera_accion() < tFIN_SENTENCIA > declaracion() declaracion_acciones() bloque_sentencias()
+  	try {
+  	  cabecera_accion() < tFIN_SENTENCIA > declaracion() declaracion_acciones() bloque_sentencias()
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void cabecera_accion(): // Error sintactico
 {}
 {
-	<tACCION> <tIDENTIFICADOR> ( parametros_formales() )?
+  	try {
+  	  <tACCION> <tIDENTIFICADOR> ( parametros_formales() )?
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void parametros_formales() : // Error sintactico
 {}
 {
-  < tPARENTESIS_IZQ > parametros() < tPARENTESIS_DCH > < tFIN_SENTENCIA>
+  	try {
+  	  < tPARENTESIS_IZQ > parametros() < tPARENTESIS_DCH > < tFIN_SENTENCIA>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void lista_parametros(): // Error sintactico
 {}
 {
-  <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)* 
+  	try {
+  	  <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)* 
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void parametros(): // Error sintactico
 {}
 {
-  < tVAL > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
-| < tREF > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
+	try {
+  	  	  < tVAL > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
+		| < tREF > tipo_variables() lista_parametros() ( < tFIN_SENTENCIA >parametros() )?
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 
@@ -406,7 +333,13 @@ void parametros(): // Error sintactico
 void bloque_sentencias(): // Error sintactico
 {}
 {
-  <tPRINCIPIO> lista_sentencias() <tFIN>
+  	
+  	try {
+  	 	<tPRINCIPIO> lista_sentencias() <tFIN>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void lista_sentencias():
@@ -418,23 +351,38 @@ void lista_sentencias():
 void sentencia(): // Error sintactico
 {}
 {
-  leer() < tFIN_SENTENCIA >
-| escribir() < tFIN_SENTENCIA >
-| <tIDENTIFICADOR> asig_incaccion()
-| seleccion()
-| mientras_que()
+	try {
+  	    leer() < tFIN_SENTENCIA >
+		| escribir() < tFIN_SENTENCIA >
+		| <tIDENTIFICADOR> asig_incaccion()
+		| seleccion()
+		| mientras_que()
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void leer(): // Error sintactico
 {}
 {
-  <tLEER> <tPARENTESIS_IZQ > lista_asignables() < tPARENTESIS_DCH >
+	try {
+  	  <tLEER> <tPARENTESIS_IZQ > lista_asignables() < tPARENTESIS_DCH >
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void lista_asignables(): // Error sintactico
 {}
 {
-  <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)*
+  	try {
+  	  <tIDENTIFICADOR> ("," <tIDENTIFICADOR>)*
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void lista_escribibles():
@@ -446,7 +394,12 @@ void lista_escribibles():
 void escribir(): // Error sintactico
 {}
 {
-  <tESCRIBIR> <tPARENTESIS_IZQ> lista_escribibles() <tPARENTESIS_DCH>
+  	try {
+  	  <tESCRIBIR> <tPARENTESIS_IZQ> lista_escribibles() <tPARENTESIS_DCH>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void asig_incaccion():
@@ -458,37 +411,67 @@ void asig_incaccion():
 void asignacion(): // Error sintactico
 {}
 {
-  <tOPAS> expresion() < tFIN_SENTENCIA >
+  	try {
+  	  <tOPAS> expresion() < tFIN_SENTENCIA >
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void invocacion_accion(): // Error sintactico
 {}
 {
-  argumentos() < tFIN_SENTENCIA >
+  	try {
+  	  argumentos() < tFIN_SENTENCIA >
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void mientras_que(): // Error sintactico
 {}
 {
-  <tMQ> expresion() lista_sentencias() <tFMQ>
+  	try {
+  	  <tMQ> expresion() lista_sentencias() <tFMQ>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void seleccion(): // Error sintactico
 {}
 {
-  <tSI> expresion() <tENT> lista_sentencias() ( <tSI_NO> lista_sentencias())? <tFSI>
+  	try {
+  	  <tSI> expresion() <tENT> lista_sentencias() ( <tSI_NO> lista_sentencias())? <tFSI>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void argumentos(): // Error sintactico
 {}
 {
-  < tPARENTESIS_IZQ > ( lista_expresiones() )? < tPARENTESIS_DCH >
+  	try {
+  	  < tPARENTESIS_IZQ > ( lista_expresiones() )? < tPARENTESIS_DCH >
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void lista_expresiones(): // Error sintactico
 {}
 {
-  expresion() (< tCOMA > expresion())*
+  	try {
+  	  expresion() (< tCOMA > expresion())*
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void expresion():
@@ -500,19 +483,34 @@ void expresion():
 void operador_relacional(): // Error sintactico
 {}
 {
-  <tIGUAL> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
+  	try {
+  	  <tIGUAL> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void expresion_simple(): // Error sintactico
 {}
 {
-  (< tMAS > | < tMENOS >)? termino() ( operador_aditivo() termino() )*
+  	try {
+  	  (< tMAS > | < tMENOS >)? termino() ( operador_aditivo() termino() )*
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void operador_aditivo(): // Error sintactico
 {}
 {
-	< tMAS > | < tMENOS > | <tOR>
+	try {
+	  < tMAS > | < tMENOS > | <tOR>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void termino():
@@ -524,13 +522,19 @@ void termino():
 void operador_multiplicativo(): // Error sintactico
 {}
 {
-  < tMUL > | <tDIV> | <tMOD> | <tAND>
+  	try {
+  	  < tMUL > | <tDIV> | <tMOD> | <tAND>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
 
 void factor(): // Error sintactico
 {}
 {
-	<tNOT> factor()
+    try {
+      	<tNOT> factor()
     | < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
     | <tENTACAR> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
     | <tCARAENT> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
@@ -540,4 +544,8 @@ void factor(): // Error sintactico
     | <tCONSTCAD>
     | <tTRUE>
     | <tFALSE>
+  	}
+  	catch (ParseException e) {
+      	error_sintactico(e.currentToken, e.expectedTokenSequences, e.tokenImage);
+	}
 }
