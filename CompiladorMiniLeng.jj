@@ -18,10 +18,10 @@ public class CompiladorMiniLeng
 {
   public static void main(String args []) throws ParseException
   {
-    CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
-	System.out.println("Leyendo de la entrada estandar...");
+    //CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+	//System.out.println("Leyendo de la entrada estandar...");
     try { 
-    	//CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
+    	CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
 		//System.out.println("Leyendo de la entrada estandar...");
     	CompiladorMiniLeng.programa();
     	System.out.println("Analizado correctamente");
@@ -47,11 +47,11 @@ public class CompiladorMiniLeng
         System.out.println(e.getMessage());
         CompiladorMiniLeng.ReInit(System.in);
 	}
-	/*catch (FileNotFoundException e) {
+	catch (FileNotFoundException e) {
 	  System.out.println("Ha ocurrido un error al intentar leer el fichero: "
 	  	+ args[0]);
 	  System.out.println(e.getMessage());
-	}*/
+	}
 	catch (Exception e) {
 	  System.out.println(e.getMessage());
 	}
@@ -72,7 +72,7 @@ public class CompiladorMiniLeng
     		expected.append(tokenImage[expectedTokenSequences[i][j]]).append(", ");
   		}
 	}
-	return expected.toString();
+	return expected.substring(0, expected.length()-2);
   }
 }
 
@@ -454,29 +454,7 @@ void sentencia(): // Error sintactico
 void leer(): // Error sintactico
 {}
 {
-	try {
   	  <tLEER> <tPARENTESIS_IZQ > lista_asignables() < tPARENTESIS_DCH >
-  	}
-  	catch (ParseException e) {
-      	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
-		+ e.currentToken.next.beginLine
-		+ ", "
-		+ e.currentToken.next.beginColumn
-		+ ") : "
-		+ "En la sentencia leer "
-		+ "se ha encontrado "
-		+ e.tokenImage[t.kind]
-		+ " "
-		+ e.currentToken.next.image
-		+ ", se esperaba: "
-		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
-		);
-		
-      	do {
-		t = getNextToken();
-		} while (t.kind != tPARENTESIS_DCH && t!=null && t.kind != EOF );
-	}
 }
 
 void lista_asignables(): // Error sintactico
@@ -499,29 +477,7 @@ void lista_escribibles():
 void escribir(): // Error sintactico
 {}
 {
-  	try {
   	  <tESCRIBIR> <tPARENTESIS_IZQ> lista_escribibles() <tPARENTESIS_DCH>
-  	}
-  	catch (ParseException e) {
-      	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
-		+ e.currentToken.next.beginLine
-		+ ", "
-		+ e.currentToken.next.beginColumn
-		+ ") : "
-		+ "En la sentencia escribir "
-		+ "se ha encontrado "
-		+ e.tokenImage[t.kind]
-		+ " "
-		+ e.currentToken.next.image
-		+ ", se esperaba: "
-		+ expectedTokens(e.expectedTokenSequences,e.tokenImage)
-		);
-		
-      	do {
-		t = getNextToken();
-		} while (t.kind != tPARENTESIS_DCH && t!=null && t.kind != EOF );
-	}
 }
 
 void asig_incaccion():
@@ -630,7 +586,7 @@ void argumentos(): // Error sintactico
 void lista_expresiones(): // Error sintactico
 {}
 {
-  	  expresion() (< tCOMA > expresion())* // expresion ,? expresion
+  	  expresion() (< tCOMA > expresion())*
 }
 
 void expresion():
@@ -664,7 +620,7 @@ void operador_relacional(): // Error sintactico
 void expresion_simple(): // Error sintactico
 {}
 {
-  (< tMAS > | < tMENOS >)? termino() ( operador_aditivo() termino() )*
+  termino() ( operador_aditivo() termino() )*
 }
 
 void operador_aditivo(): // Error sintactico
@@ -684,7 +640,7 @@ void operador_aditivo(): // Error sintactico
 		+ e.tokenImage[t.kind]
 		+ " "
 		+ e.currentToken.next.image
-		+ ", se esperaba un operador relacional: =,<>,<,>,<=,>="
+		+ ", se esperaba un operador relacional: +,-,OR"
 		);
 	}
 }
@@ -721,7 +677,9 @@ void factor(): // Error sintactico
 {}
 {
     try {
-      	<tNOT> factor()
+      "-" factor()
+  	| "+" factor() 
+  	|  <tNOT> factor()
     | < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
     | <tENTACAR> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
     | <tCARAENT> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
