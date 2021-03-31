@@ -24,7 +24,7 @@ Principio
                 );
                 %% Error 1: en escribir %%
                 escribir();
-                %% Error 2: se ha leido caracter y se esperaba un factor.
+                %% Error 2: se ha leido caracter y se esperaba un factor. %%
                 escribir(caracter a := 5);
                 Si d<=0 ent                    
                     leer(d);
