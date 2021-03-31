@@ -1,3 +1,8 @@
+%Pruebas expresiones, términos y factores
+%Error 1: espera algo entre los paréntesis de escribir, no se le pasa nada.
+%Error 2: se ha leido un identificador y se esperaba una expresión.
+%Error 3: falta una expresion despues de mq.
+
 programa p;
 
 % declaracion variables
@@ -17,12 +22,11 @@ Principio
                         )
                     )
                 );
-                %% Error en escribir %%
+                %% Error 1: en escribir %%
                 escribir();
-                %% error se ha leido caracter y se esperaba un factor.
+                %% Error 2: se ha leido caracter y se esperaba un factor.
                 escribir(caracter a := 5);
-                Si d<=0 ent
-                    %% Error en leer, no hay asignables %%
+                Si d<=0 ent                    
                     leer(d);
                 si_no 
                     si true AND 8
@@ -30,7 +34,7 @@ Principio
                     fsi
                 FSi
                 
-                % Error por que falta una expresion.
+                % Error 3: porque falta una expresion despues de mq.
                 mq 
                     mq expresion
                         escribir("El numero debe ser postivo.");
