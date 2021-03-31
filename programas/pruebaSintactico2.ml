@@ -1,5 +1,16 @@
-%-----------------------------------------------------------
 %Pruebas declaraciones
+%Error 1: Pide tipo_variable en declaracion de variables pero recibe algo 
+%que no se deriba de ahi (un identificador)
+%Error 2: Pide identificador en declaracion de variables pero recibe otra cosa 
+%Error 3: Pide ; al final de declaracion de variables pero hay otra cosa
+%Error 4: Pide ; al final de declaracion de accion pero hay otra cosa
+%Error 5: Espera tREF o tVAL o ")" en parámetros pero recibe identificador
+%Error 6: Pide ; al final de declaracion de accion pero recibe otro token (tMQ)
+%y después un ;
+%%Error 7: pide tACCION pero recive otra cosa.
+
+
+%-----------------------------------------------------------
 Programa maximo_comun_divisor;
 %-----------------------------------------------------------
 
@@ -8,7 +19,7 @@ accion a1;
 %-----------------------------------------------------------
 
 %Error 1: Pide tipo_variable pero recibe algo que no se deriba de ahi 
-%(Un identificador)
+%(un identificador)
 flotante m, d, a, b;
 
 Principio
@@ -37,7 +48,7 @@ Principio
 Fin
 
 %-----------------------------------------------------------
-%Error 4: Pide ; pero recibe tENTERO (ignora hasta "Fin")? 
+%Error 4: Pide ; pero recibe tENTERO
 accion dato
 %-----------------------------------------------------------
 entero r;
@@ -56,7 +67,7 @@ Fin
 
 
 %-----------------------------------------------------------
-%Error 6: Pide tACCION pero recibe otro token (tMQ)
+%Error 6: Pide ; pero recibe otro token (tMQ)
 accion mq mq;
 %-----------------------------------------------------------
 Principio
@@ -64,9 +75,7 @@ Principio
 Fin
 
 %-----------------------------------------------------------
-%%Error 6: Pide tACCION pero recibe otro token (tMQ). Al no saber
-que es una accion interpreta Principio y Fin como los del programa.
-Corregir para ver el Error 8.%%
+%%Error 7: pide tACCION pero recive un identificador
 funcion dato;
 %-----------------------------------------------------------
 Principio
