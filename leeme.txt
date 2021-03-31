@@ -1,0 +1,41 @@
+El fichero minilengcompiler.jj se trata del analizador lexico-sintáctico LL(1) implementado para la 
+prácticas 2 y 3 de la asignatura Procesadores de lenguajes. Este ha sido desarrollado por el equipo
+formado por Alonso del Rincón de la Villa y Fabián Conde Lafuente, nips 783252 y 776127 
+respectivamente.
+
+El analizador se llama MiniLeng, se trata de un lenguaje estructurado sencillo, con algunas
+características similares a Pascal, y otras a C, entre las cuales destacan: 
+	- Se permiten comentarios de una línea, comenzados por % y terminados por el fin de
+línea
+	- Se permiten comentarios multilinea, comenzados y terminados por %%.
+	- Todo programa y accion debe contener, al menos, una instrucción. 
+	- Se permite la declaración y uso de variables simples, tanto globales como locales, de tres
+tipos: entero, carácter y booleano.
+	- Ningún símbolo puede llamarse como las palabras reservadas. Es decir, no se permite
+declarar una variable o una función de nombre ‘entero’, por ejemplo.
+	- Los identificadores estarán compuestos por letras, números y el símbolo “_”, con las
+siguientes restricciones:
+		- Un identificador nunca puede comenzar por un número.
+		- Un identificador nunca puede terminar en “_”.
+	- Se permite el uso de cadenas de caracteres constantes, aunque solamente para escritura:
+escribir("Escribe un numero: ");
+	- Se permite la declaración y uso de acciones (procedimientos) anidadas con paso de
+parámetros simples tanto por valor como por referencia, con el significado habitual de
+estos términos. En el caso de paso de parámetros por valor, se precederá la signatura del
+parámetro con la palabra reservada val, mientras que en el paso por referencia se
+utilizará la palabra ref. Es obligatorio especificar si el parámetro se pasa por valor o por
+referencia.
+accion procesar( val entero i, j, k; ref caracter c, d, e; val booleano f);
+	- Se permite la escritura de variables simples. Como salida, la operación de escritura
+mostrará por pantalla el valor entero, y las cadenas “Verdadero” o “Falso” en el caso de
+booleanos (“Verdadero” si el valor del booleano es 1, “Falso” si es 0).
+	- El lenguaje tiene dos funciones predefinidas que permiten pasar de entero a carácter y
+viceversa, llamadas “entacar()” y “caraent()”.
+	- Se permite al usuario ejecutar instrucciones de seleccion y bucle mientras_que.
+	- Cuando el analizador encuentre un error sintáctico, se ejecutará el modo de recuperación.
+Con ayuda de este se intentará recuperar del error y seguir analizando el resto del programa. 
+Es posible que este error provoque más errores o invisibilice otros.
+
+Mejoras implementadas:
+	- Comentarios multilínea.
+	- Modo de recuperación (PANIC MODE). 
