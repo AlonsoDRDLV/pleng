@@ -61,7 +61,7 @@ entero r;
 Principio
 	%---------------------------------------------------
         %Error 5: Se espera expresion y se lee una sentencia            
-	si r:=0 
+	si r:=0 ent
                 a:=b;                
         fsi           
 	%---------------------------------------------------
@@ -71,7 +71,7 @@ Principio
                 a:=b;                
         fsi              
 	%---------------------------------------------------
-	si r<>0
+	si r<>0 ent
                 a:=b;                
 
         %Error 7: Se espera tFSI o sentencia y se lee tFIN

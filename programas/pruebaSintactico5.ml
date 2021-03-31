@@ -10,5 +10,3 @@ Principio
     entero c, v, caracter;
 
 fin
-
-
