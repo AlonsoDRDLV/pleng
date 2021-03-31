@@ -1,5 +1,11 @@
 %% Prueba que detecta como error la falta de comas entre identificadores
 listas de parametros listas de asignables y listas de escribibles %%
+%Error 1: falta la coma entre elementos de una lista de identificadores.
+%Error 2: falta la coma entre elementos de una lista de asignables.
+%Error 3: falta la coma entre elementos de una lista de escribibles.
+%Error 4: falta la coma entre elementos de una lista de parametros.
+%Error 5: falta la coma entre argumentos.
+
 %-----------------------------------------------------------
 Programa maximo_comun_divisor;
 %-----------------------------------------------------------
