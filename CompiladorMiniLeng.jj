@@ -1,7 +1,8 @@
 /**
- * 	Autores:fddd
- *	Fecha ultima revision:
- * 	Comentarios:
+ * 	Autores: Alonso del Rinc de la Villa y Fabi疣 Conde Lafuente
+ *	NIPs:	783252 y 776127
+ *	Fecha ultima revision: 31/03/2021
+ * 	Comentarios: Analizador lexico-sint當tico LL(1)
  */
 options
 {
@@ -201,12 +202,12 @@ void programa ():
 	}
     catch (ParseException e) {
 		Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
 		+ ") : "
-		+ "En la declaraciﾃｳn de programa, "
+		+ "En la declaraci de programa, "
 		+ "se ha encontrado "
 		+ e.tokenImage[t.kind]
 		+ " "
@@ -229,12 +230,12 @@ void declaracion_variables():
 	}
     catch (ParseException e) {	      
 		Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
 		+ ") : "
-		+ "En la declaraciﾃｳn de variables, "
+		+ "En la declaraci de variables, "
 		+ "se ha encontrado "
 		+ e.tokenImage[t.kind]
 		+ " "
@@ -259,13 +260,13 @@ void declaracion ():
   	  tipo_variables() identificadores()
 }
 
-void identificadores(): // Error sintactico
+void identificadores():
 {}
 {
   <tIDENTIFICADOR> ( < tCOMA > <tIDENTIFICADOR> )*
 }
 
-void tipo_variables(): // Error sintactico
+void tipo_variables():
 {}
 {
   	  <tENTERO> | <tCARACTER> | <tBOOLEANO>
@@ -278,20 +279,20 @@ void declaracion_acciones():
   (declaracion_accion())*
 }
 
-void declaracion_accion(): // Error sintactico
+void declaracion_accion():
 {}
 {
   	  cabecera_accion() declaracion_variables() declaracion_acciones() bloque_sentencias()
   	
 }
 
-void cabecera_accion(): // Error sintactico
+void cabecera_accion():
 {}
 {
   try { <tACCION> <tIDENTIFICADOR> ( parametros_formales() ) < tFIN_SENTENCIA > }
   catch (ParseException e) {
       	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -321,12 +322,12 @@ void parametros_formales() :
   	}
   	catch (ParseException e) {
       	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
 		+ ") : "
-		+ "Los parametros de la cabecera de la acciﾃｳn son incorrectos, "
+		+ "Los parametros de la cabecera de la acci son incorrectos, "
 		+ "se ha encontrado "
 		+ e.tokenImage[t.kind]
 		+ " "
@@ -341,7 +342,7 @@ void parametros_formales() :
 	}
 }
 
-void lista_parametros(): // Error sintactico
+void lista_parametros():
 {}
 {
   	<tIDENTIFICADOR> (< tCOMA > <tIDENTIFICADOR>)* 
@@ -359,7 +360,7 @@ void clase_parametros():
   	  	<tVAL> | <tREF>
 }
 
-void bloque_sentencias(): // Error sintactico
+void bloque_sentencias():
 {}
 {
   	try {
@@ -367,7 +368,7 @@ void bloque_sentencias(): // Error sintactico
   	}
   	catch (ParseException e) {
       	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -393,7 +394,7 @@ void lista_sentencias():
   ( sentencia() )+
 }
 
-void sentencia(): // Error sintactico
+void sentencia():
 {}
 {
 	try {
@@ -405,7 +406,7 @@ void sentencia(): // Error sintactico
   	}
   	catch (ParseException e) {
   	  Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -425,13 +426,13 @@ void sentencia(): // Error sintactico
 	}
 }
 
-void leer(): // Error sintactico
+void leer():
 {}
 {
   	  <tLEER> <tPARENTESIS_IZQ > lista_asignables() < tPARENTESIS_DCH >
 }
 
-void lista_asignables(): // Error sintactico
+void lista_asignables():
 {}
 {
   	try {
@@ -448,7 +449,7 @@ void lista_escribibles():
   lista_expresiones()
 }
 
-void escribir(): // Error sintactico
+void escribir():
 {}
 {
   	  <tESCRIBIR> <tPARENTESIS_IZQ> lista_escribibles() <tPARENTESIS_DCH>
@@ -460,20 +461,20 @@ void asig_incaccion():
   asignacion() | invocacion_accion()
 }
 
-void asignacion(): // Error sintactico
+void asignacion():
 {}
 {
   	<tOPAS> expresion()
       
 }
 
-void invocacion_accion(): // Error sintactico
+void invocacion_accion():
 {}
 {
   	  (argumentos())?
 }
 
-void mientras_que(): // Error sintactico
+void mientras_que():
 {}
 {
   	try {
@@ -481,7 +482,7 @@ void mientras_que(): // Error sintactico
   	}
   	catch (ParseException e) {
       	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -501,7 +502,7 @@ void mientras_que(): // Error sintactico
 	}
 }
 
-void seleccion(): // Error sintactico
+void seleccion():
 {}
 {
   	try {
@@ -509,7 +510,7 @@ void seleccion(): // Error sintactico
   	}
   	catch (ParseException e) {
   	  	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -529,7 +530,7 @@ void seleccion(): // Error sintactico
 	}
 }
 
-void argumentos(): // Error sintactico
+void argumentos():
 {}
 {
   	try {
@@ -537,12 +538,12 @@ void argumentos(): // Error sintactico
   	}
   	catch (ParseException e) {
 		Token t = e.currentToken.next;
-		System.out.println("ERROR SINTﾃ，TICO ("
+		System.out.println("ERROR SINTﾁCTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
 		+ ") : "
-		+ "En la declaraciﾃｳn de argumentos, "
+		+ "En la declaraci de argumentos, "
 		+ "se ha encontrado "
 		+ e.tokenImage[t.kind]
 		+ " "
@@ -557,7 +558,7 @@ void argumentos(): // Error sintactico
 	}
 }
 
-void lista_expresiones(): // Error sintactico
+void lista_expresiones():
 {}
 {
   	  expresion() (< tCOMA > expresion())*
@@ -569,54 +570,22 @@ void expresion():
   expresion_simple() ( operador_relacional() expresion_simple() )?
 }
 
-void operador_relacional(): // Error sintactico
+void operador_relacional():
 {}
 {
-  	try {
-  		<tIGUAL> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
-	}
-	catch (ParseException e) {
-	  Token t = e.currentToken.next;
-	  System.out.println("ERROR SINTﾃ，TICO ("
-		+ e.currentToken.next.beginLine
-		+ ", "
-		+ e.currentToken.next.beginColumn
-		+ ") : "
-		+ "Se ha encontrado "
-		+ e.tokenImage[t.kind]
-		+ " "
-		+ e.currentToken.next.image
-		+ ", se esperaba un operador relacional: =,<>,<,>,<=,>="
-		);
-	}
+	<tIGUAL> | <tNI> | <tMENOR> | <tMAYOR> | <tMEI> | <tMAI>
 }
 
-void expresion_simple(): // Error sintactico
+void expresion_simple():
 {}
 {
   termino() ( operador_aditivo() termino() )*
 }
 
-void operador_aditivo(): // Error sintactico
+void operador_aditivo():
 {}
 {
-	try {
-	  < tMAS > | < tMENOS > | <tOR>
-  	}
-  	catch (ParseException e) {
-      Token t = e.currentToken.next;
-	  System.out.println("ERROR SINTﾃ，TICO ("
-		+ e.currentToken.next.beginLine
-		+ ", "
-		+ e.currentToken.next.beginColumn
-		+ ") : "
-		+ "Se ha encontrado "
-		+ e.tokenImage[t.kind]
-		+ " "
-		+ e.currentToken.next.image
-		+ ", se esperaba un operador relacional: +,-,OR"
-		);
-	}
+  < tMAS > | < tMENOS > | <tOR>
 }
 
 void termino():
@@ -625,63 +594,25 @@ void termino():
   factor() ( operador_multiplicativo() factor() )*
 }
 
-void operador_multiplicativo(): // Error sintactico
+void operador_multiplicativo():
 {}
 {
-  	try {
-  	  < tMUL > | <tDIV> | <tMOD> | <tAND>
-  	}
-  	catch (ParseException e) {
-      	Token t = e.currentToken.next;
-	  System.out.println("ERROR SINTﾃ，TICO ("
-		+ e.currentToken.next.beginLine
-		+ ", "
-		+ e.currentToken.next.beginColumn
-		+ ") : "
-		+ "Se ha encontrado "
-		+ e.tokenImage[t.kind]
-		+ " "
-		+ e.currentToken.next.image
-		+ ", se esperaba un operador multiplicativo: *,div,mod,>,and"
-		);
-	}
+  < tMUL > | <tDIV> | <tMOD> | <tAND>
 }
 
-void factor(): // Error sintactico
+void factor(): 
 {}
 {
-    try {
-      "-" factor()
-  	| "+" factor() 
-  	|  <tNOT> factor()
-    | < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
-    | <tENTACAR> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
-    | <tCARAENT> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
-    | <tIDENTIFICADOR>
-    | <tCONSTENTERA>
-    | <tCONSTCHAR>
-    | <tCONSTCAD>
-    | <tTRUE>
-    | <tFALSE>
-  	}
-  	catch (ParseException e) {
-      	Token t = e.currentToken.next;
-	  System.out.println("ERROR SINTﾃ，TICO ("
-		+ e.currentToken.next.beginLine
-		+ ", "
-		+ e.currentToken.next.beginColumn
-		+ ") : "
-		+ "Se ha encontrado "
-		+ e.tokenImage[t.kind]
-		+ " "
-		+ e.currentToken.next.image
-		+ ", se esperaba un factor"
-		);
-
-		do {
-		t = getNextToken();
-		} while (t.kind != tPARENTESIS_DCH && t.kind != tIDENTIFICADOR && t.kind != tCONSTENTERA
-			&& t.kind != tCONSTCHAR && t.kind != tCONSTCAD && t.kind != tTRUE && t.kind != tFALSE
-			&& t!=null && t.kind != EOF );
-	}
+	  "-" factor()
+	| "+" factor() 
+	|  <tNOT> factor()
+	| < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
+	| <tENTACAR> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
+	| <tCARAENT> < tPARENTESIS_IZQ > expresion() < tPARENTESIS_DCH >
+	| <tIDENTIFICADOR>
+	| <tCONSTENTERA>
+	| <tCONSTCHAR>
+	| <tCONSTCAD>
+	| <tTRUE>
+	| <tFALSE>
 }
