@@ -1,4 +1,13 @@
 %Prueba sentencias
+%Error 1: Se espera tPRINCIPIO y se lee otra cosa
+%Error 2: Se espera sentencia o tFIN y se lee otra cosa
+%Error 3: Se espera sentencia y se lee otra cosa
+%Error 4: Se espera tFMQ o sentencia y se lee tFIN
+%Error 5: Se espera expresion tras tMQ y se lee otra cosa            
+%Error 6: Se espera fENT y se lee otra cosa        
+%Error 7: Se espera tFSI o sentencia y se lee otra cosa
+%Error 8: el programa no contiene al menos una sentencia
+
 %-----------------------------------------------------------
 Programa maximo_comun_divisor;
 %-----------------------------------------------------------
