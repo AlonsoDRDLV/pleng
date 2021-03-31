@@ -10,27 +10,27 @@ options
   ignore_case = true;
 }
 
-PARSER_BEGIN(CompiladorMiniLeng)
+PARSER_BEGIN(minilengcompiler)
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class CompiladorMiniLeng
+public class minilengcompiler
 {
   public static void main(String args []) throws ParseException
   {
-    //CompiladorMiniLeng parser = new CompiladorMiniLeng(System.in);
+    //minilengcompiler parser = new minilengcompiler(System.in);
 	//System.out.println("Leyendo de la entrada estandar...");
     try { 
-    	CompiladorMiniLeng parser = new CompiladorMiniLeng(new FileInputStream(args[0]));
+    	minilengcompiler parser = new minilengcompiler(new FileInputStream(args[0]));
 		//System.out.println("Leyendo de la entrada estandar...");
-    	CompiladorMiniLeng.programa();
+    	minilengcompiler.programa();
     	System.out.println("Analizado correctamente");
     }
     catch (TokenMgrError e) {
 		//Error léxico
 		try {
-			System.out.println("ERROR LÉXICO ("
+			System.out.println("ERROR L�XICO ("
 			+ SimpleCharStream.getBeginLine()
 			+ ", "
 			+ SimpleCharStream.getBeginColumn()
@@ -44,9 +44,9 @@ public class CompiladorMiniLeng
 	}
 	catch (ParseException e) {
 		//Error sintáctico
-		System.out.println("Error sintáctico!");
+		System.out.println("Error sint�ctico!");
         System.out.println(e.getMessage());
-        CompiladorMiniLeng.ReInit(System.in);
+        minilengcompiler.ReInit(System.in);
 	}
 	catch (FileNotFoundException e) {
 	  System.out.println("Ha ocurrido un error al intentar leer el fichero: "
@@ -77,7 +77,7 @@ public class CompiladorMiniLeng
   }
 }
 
-PARSER_END(CompiladorMiniLeng)
+PARSER_END(minilengcompiler)
 
 SKIP :
 {
