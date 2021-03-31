@@ -27,13 +27,13 @@ public class CompiladorMiniLeng
     	System.out.println("Analizado correctamente");
     }
     catch (TokenMgrError e) {
-		//Error lÃ©xico
+		//Error lÃƒÂ©xico
 		try {
-			System.out.println("ERROR LÃ‰XICO ("
+			System.out.println("ERROR LÃƒâ€°XICO ("
 			+ SimpleCharStream.getBeginLine()
 			+ ", "
 			+ SimpleCharStream.getBeginColumn()
-			+ "): SÃ­mbolo no reconocido: \""
+			+ "): SÃƒÂ­mbolo no reconocido: \""
 			+ SimpleCharStream.readChar() + "\""
 			);
 		} catch (Exception ex) {
@@ -42,8 +42,8 @@ public class CompiladorMiniLeng
 		}
 	}
 	catch (ParseException e) {
-		//Error sintÃ¡ctico
-		System.out.println("Error sintÃ¡ctico!");
+		//Error sintÃƒÂ¡ctico
+		System.out.println("Error sintÃƒÂ¡ctico!");
         System.out.println(e.getMessage());
         CompiladorMiniLeng.ReInit(System.in);
 	}
@@ -175,7 +175,7 @@ TOKEN : /* otros */
 | < tPARENTESIS_DCH : ")" >
 }
 
-TOKEN: /* Operadores aritmÃƒÂ©ticos */
+TOKEN: /* Operadores aritmÃƒÆ’Ã‚Â©ticos */
 {
   < tMAS : "+">
 | < tMENOS : "-" >
@@ -201,12 +201,12 @@ void programa ():
 	}
     catch (ParseException e) {
 		Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
+		System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
 		+ ") : "
-		+ "En la declaración de programa, "
+		+ "En la declaraciÃ³n de programa, "
 		+ "se ha encontrado "
 		+ e.tokenImage[t.kind]
 		+ " "
@@ -229,12 +229,12 @@ void declaracion_variables():
 	}
     catch (ParseException e) {	      
 		Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
+		System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
 		+ ") : "
-		+ "En la declaración de variables, "
+		+ "En la declaraciÃ³n de variables, "
 		+ "se ha encontrado "
 		+ e.tokenImage[t.kind]
 		+ " "
@@ -290,7 +290,7 @@ void cabecera_accion():
   try { <tACCION> <tIDENTIFICADOR> ( parametros_formales() ) < tFIN_SENTENCIA > }
   catch (ParseException e) {
       	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
+		System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -320,12 +320,12 @@ void parametros_formales() :
   	}
   	catch (ParseException e) {
       	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
+		System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
 		+ ") : "
-		+ "Los parametros de la cabecera de la acción son incorrectos, "
+		+ "Los parametros de la cabecera de la acciÃ³n son incorrectos, "
 		+ "se ha encontrado "
 		+ e.tokenImage[t.kind]
 		+ " "
@@ -355,7 +355,23 @@ void parametros():
 void clase_parametros():
 {}
 {
-  	<tVAL> | <tREF>
+  	try {
+  	  	<tVAL> | <tREF>
+  	}
+  	catch (ParseException e) {
+  	  	Token t = e.currentToken.next;
+		System.out.println("ERROR SINTÃ�CTICO ("
+		+ e.currentToken.next.beginLine
+		+ ", "
+		+ e.currentToken.next.beginColumn
+		+ ") : "
+		+ "Se ha encontrado "
+		+ e.tokenImage[t.kind]
+		+ " "
+		+ e.currentToken.next.image
+		+ ", se esperaba una clase del parametro: val o ref"
+		);
+  	}
 }
 
 void bloque_sentencias(): // Error sintactico
@@ -366,7 +382,7 @@ void bloque_sentencias(): // Error sintactico
   	}
   	catch (ParseException e) {
       	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
+		System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -404,7 +420,7 @@ void sentencia():
   	}
   	catch (ParseException e) {
   	  Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÃ�CTICO ("
+		System.out.println("ERROR SINTÃƒï¿½CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -475,7 +491,7 @@ void mientras_que():
   	}
   	catch (ParseException e) {
       	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
+		System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -503,7 +519,7 @@ void seleccion():
   	}
   	catch (ParseException e) {
   	  	Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
+		System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
@@ -531,12 +547,12 @@ void argumentos():
   	}
   	catch (ParseException e) {
 		Token t = e.currentToken.next;
-		System.out.println("ERROR SINTÁCTICO ("
+		System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
 		+ ") : "
-		+ "En la declaración de argumentos, "
+		+ "En la declaraciÃ³n de argumentos, "
 		+ "se ha encontrado "
 		+ e.tokenImage[t.kind]
 		+ " "
@@ -612,7 +628,7 @@ void factor(): // Error sintactico
   	}
   	catch (ParseException e) {
       	Token t = e.currentToken.next;
-	  System.out.println("ERROR SINTÁCTICO ("
+	  System.out.println("ERROR SINTÃ�CTICO ("
 		+ e.currentToken.next.beginLine
 		+ ", "
 		+ e.currentToken.next.beginColumn
